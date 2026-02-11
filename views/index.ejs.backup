@@ -1789,7 +1789,7 @@
             data-widget_type="theme-site-logo.default"
           >
             <div class="elementor-widget-container">
-              <a href="/">
+              <a href="https://grafeno.digital">
                 <img
                   width="283"
                   height="62"
@@ -2003,7 +2003,7 @@
                                     <div class="elementor-icon-box-wrapper">
                                       <div class="elementor-icon-box-icon">
                                         <a
-                                          href="#"
+                                          href="https://grafeno.digital/analytics/"
                                           class="elementor-icon"
                                           tabindex="-1"
                                           aria-label="Grafeno Analytics"
@@ -2030,7 +2030,7 @@
                                       <div class="elementor-icon-box-content">
                                         <div class="elementor-icon-box-title">
                                           <a
-                                            href="#"
+                                            href="https://grafeno.digital/analytics/"
                                           >
                                             Grafeno Analytics
                                           </a>
@@ -2051,7 +2051,7 @@
                                       <div class="elementor-icon-box-content">
                                         <div class="elementor-icon-box-title">
                                           <a
-                                            href="#"
+                                            href="https://grafeno.digital/analytics/"
                                           >
                                             Grafeno Analytics
                                           </a>
@@ -3088,7 +3088,7 @@
                                     <p
                                       class="elementor-heading-title elementor-size-default"
                                     >
-                                      <a href="#"
+                                      <a href="https://grafeno.digital/app/"
                                         >Conheça o app Grafeno ↗</a
                                       >
                                     </p>
@@ -3840,7 +3840,7 @@
                 <div class="elementor-button-wrapper">
                   <a
                     class="elementor-button elementor-button-link elementor-size-sm"
-                    href="#"
+                    href="#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjM0MzcxIiwidG9nZ2xlIjpmYWxzZX0%3D"
                   >
                     <span class="elementor-button-content-wrapper">
                       <span class="elementor-button-text">Abrir conta</span>
@@ -3904,7 +3904,7 @@
                           <div class="elementor-background-overlay"></div>
                           <a
                             class="swiper-slide-inner"
-                            href="#"
+                            href="#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjM0MzcxIiwidG9nZ2xlIjpmYWxzZX0%3D"
                             ><div class="swiper-slide-contents">
                               <div class="elementor-slide-heading">
                                 A melhor experiência<br />do ciclo de crédito a
@@ -4508,7 +4508,7 @@
                     <div class="elementor-button-wrapper">
                       <a
                         class="elementor-button elementor-button-link elementor-size-sm"
-                        href="#"
+                        href="#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjM0MzcxIiwidG9nZ2xlIjpmYWxzZX0%3D"
                       >
                         <span class="elementor-button-content-wrapper">
                           <span class="elementor-button-text"
@@ -4587,7 +4587,7 @@
                   data-widget_type="image.default"
                 >
                   <div class="elementor-widget-container">
-                      <a href="#">
+                    <a href="https://grafeno.digital/materiais-ricos/">
                       <img
                         fetchpriority="high"
                         decoding="async"
@@ -8555,7 +8555,7 @@
                                 <div class="elementor-button-wrapper">
                                   <a
                                     class="elementor-button elementor-button-link elementor-size-sm"
-                                    href="#"
+                                    href="#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjM0MzcxIiwidG9nZ2xlIjpmYWxzZX0%3D"
                                   >
                                     <span
                                       class="elementor-button-content-wrapper"
@@ -8653,7 +8653,7 @@
                 data-widget_type="theme-site-logo.default"
               >
                 <div class="elementor-widget-container">
-                  <a href="/">
+                  <a href="https://grafeno.digital">
                     <img
                       width="283"
                       height="62"
@@ -8775,29 +8775,29 @@
                 <div class="elementor-widget-container">
                   <ul class="elementor-icon-list-items">
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/sobre-nos">
                         <span class="elementor-icon-list-text">Sobre nós</span>
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/seguranca/">
                         <span class="elementor-icon-list-text">Segurança</span>
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.gupy.io/">
                         <span class="elementor-icon-list-text"
                           >Trabalhe conosco</span
                         >
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/blog/">
                         <span class="elementor-icon-list-text">Blog</span>
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/assine-grafeno/">
                         <span class="elementor-icon-list-text"
                           >Assine Grafeno</span
                         >
@@ -8836,45 +8836,45 @@
                 <div class="elementor-widget-container">
                   <ul class="elementor-icon-list-items">
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/conta-escrow/">
                         <span class="elementor-icon-list-text"
                           >Conta Escrow</span
                         >
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/conta-empresa/">
                         <span class="elementor-icon-list-text"
                           >Conta Empresa</span
                         >
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/titularidades/">
                         <span class="elementor-icon-list-text"
                           >Titularidades</span
                         >
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/nota-comercial/">
                         <span class="elementor-icon-list-text"
                           >Nota Comercial</span
                         >
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/emissao-de-ccb/">
                         <span class="elementor-icon-list-text">CCB</span>
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/cpr-f/">
                         <span class="elementor-icon-list-text">CPR-F</span>
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/grafeno-plataforma/">
                         <span class="elementor-icon-list-text"
                           >Plataforma White Label</span
                         >
@@ -8913,14 +8913,14 @@
                 <div class="elementor-widget-container">
                   <ul class="elementor-icon-list-items">
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/atendimento">
                         <span class="elementor-icon-list-text"
                           >Atendimento</span
                         >
                       </a>
                     </li>
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/ouvidoria/">
                         <span class="elementor-icon-list-text">Ouvidoria</span>
                       </a>
                     </li>
@@ -8967,7 +8967,7 @@
                 <div class="elementor-widget-container">
                   <ul class="elementor-icon-list-items">
                     <li class="elementor-icon-list-item">
-                      <a href="#">
+                      <a href="https://grafeno.digital/integracoes/">
                         <span class="elementor-icon-list-text">API</span>
                       </a>
                     </li>
@@ -9077,6 +9077,16 @@
             >
               <div class="elementor-widget-container">
                 <ul class="elementor-icon-list-items elementor-inline-items">
+                  <li class="elementor-icon-list-item elementor-inline-item">
+                    <a
+                      href="https://8949671.fs1.hubspotusercontent-na1.net/hubfs/8949671/Site%20Grafeno/2025/Pol%C3%ADtica%20de%20Privacidades%20(LGPD).pdf"
+                      target="_blank"
+                    >
+                      <span class="elementor-icon-list-text"
+                        >Aviso de Privacidade</span
+                      >
+                    </a>
+                  </li>
                   <li class="elementor-icon-list-item elementor-inline-item">
                     <a
                       href="https://staging-5809-spcgrafeno.wpcomstaging.com/termos-de-uso/"
@@ -10458,7 +10468,8 @@
                 <div class="elementor-button-wrapper">
                   <a
                     class="elementor-button elementor-button-link elementor-size-sm"
-                    href="/grafeno"
+                    href="https://pagamentos.grafeno.digital/"
+                    target="_blank"
                   >
                     <span class="elementor-button-content-wrapper">
                       <span class="elementor-button-icon">

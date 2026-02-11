@@ -1,0 +1,393 @@
+* {
+  box-sizing:border-box
+}
+.pliq-modal {
+  font-family:sans-serif;
+  margin:0
+}
+.pliq_demo-container {
+  align-items:center;
+  display:flex;
+  height:100%;
+  justify-content:center
+}
+.pliq_modal-control {
+  border:1px solid #521751;
+  padding:1rem;
+  text-align:center
+}
+.pliq-modal-full-screen {
+  background:#fff;
+  left:2%;
+  position:fixed;
+  top:2%;
+  transform:translateY(100%);
+  width:95%;
+  z-index:100000000
+}
+.pliq-btn-full-screen {
+  align-items:center;
+  background:#7e7a7a;
+  border-radius:20px;
+  color:#fff;
+  content:"x";
+  cursor:pointer;
+  display:flex;
+  font-size:16px;
+  font-weight:400;
+  height:32px;
+  justify-content:center;
+  line-height:0px;
+  margin:0;
+  padding:0;
+  position:absolute;
+  right:37px;
+  text-decoration:none;
+  top:-12px;
+  transform:translateY(100%);
+  width:32px
+}
+.pliq-modal-full-right {
+  background-color:#fff;
+  position:fixed;
+  top:0;
+  transform:translateX(100%);
+  width:600px
+}
+.pliq-modal-bottom-right,
+.pliq-modal-full-right {
+  bottom:0;
+  right:0;
+  transition:all .3s ease-in-out;
+  z-index:100000000
+}
+.pliq-modal-bottom-right {
+  background:#fff;
+  border-radius:8px;
+  position:absolute;
+  transform:translateY(100%);
+  width:400px
+}
+.pliq-modal-full-left {
+  background-color:#fff;
+  position:fixed;
+  top:0;
+  transform:translateX(-100%);
+  width:600px
+}
+.pliq-modal-bottom-left,
+.pliq-modal-full-left {
+  bottom:0;
+  left:0;
+  transition:all .3s ease-in-out;
+  z-index:100000000
+}
+.pliq-modal-bottom-left {
+  background:#fff;
+  border-radius:8px;
+  position:absolute;
+  transform:translateY(100%);
+  width:400px
+}
+.show-modal-x,
+.show-modal-y {
+  transform:translateY(0)!important
+}
+.pliq_modal-actions {
+  text-align:right
+}
+.pliq_backdrop {
+  background:#0000002e;
+  height:100%;
+  left:0;
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:100000000
+}
+.pliq_open {
+  display:block
+}
+.pliq_text-center {
+  margin-top:10px;
+  text-align:center
+}
+.pliq_btn {
+  background-color:#fff;
+  background:#7e7a7a;
+  border-radius:50% 0 0 50%;
+  box-shadow:-2px 0 9px -2px rgba(0,0,0,.3);
+  color:#fff;
+  font-size:20px;
+  height:40px;
+  left:-39px;
+  padding:12px 0 12px 18px;
+  width:40px
+}
+.pliq-btn-full-right,
+.pliq_btn {
+  content:"x";
+  cursor:pointer;
+  display:none;
+  line-height:18px;
+  position:absolute;
+  text-align:center;
+  text-decoration:none;
+  top:0
+}
+.pliq-btn-full-right {
+  background-color:#fff;
+  background:#e3e3e3;
+  border-radius:50%;
+  color:#000;
+  font-size:22px;
+  height:30px;
+  margin-left:550px;
+  margin-top:25px;
+  padding:6px 0 17px 9px;
+  width:29px
+}
+.pliq-btn-bottom-right {
+  margin-left:350px
+}
+.pliq-btn-bottom-right,
+.pliq-btn-full-left {
+  background-color:#fff;
+  background:#e3e3e3;
+  border-radius:50%;
+  color:#000;
+  content:"x";
+  cursor:pointer;
+  display:none;
+  font-size:22px;
+  height:30px;
+  line-height:18px;
+  margin-top:25px;
+  padding:6px 0 17px 9px;
+  position:absolute;
+  text-align:center;
+  text-decoration:none;
+  top:0;
+  width:29px
+}
+.pliq-btn-full-left {
+  margin-left:550px
+}
+.pliq-btn-bottom-left {
+  background-color:#fff;
+  background:#e3e3e3;
+  border-radius:50%;
+  color:#000;
+  content:"x";
+  cursor:pointer;
+  display:none;
+  font-size:22px;
+  height:30px;
+  line-height:18px;
+  margin-left:350px;
+  margin-top:25px;
+  padding:6px 0 17px 9px;
+  position:absolute;
+  text-align:center;
+  text-decoration:none;
+  top:0;
+  width:29px
+}
+.pliq_login-block .pliq_auth-box {
+  margin:0 auto!important;
+  max-width:450px
+}
+.pliq_col,
+.pliq_col-1,
+.pliq_col-10,
+.pliq_col-11,
+.pliq_col-12,
+.pliq_col-2,
+.pliq_col-3,
+.pliq_col-4,
+.pliq_col-5,
+.pliq_col-6,
+.pliq_col-7,
+.pliq_col-8,
+.pliq_col-9,
+.pliq_col-auto,
+.pliq_col-lg,
+.pliq_col-lg-1,
+.pliq_col-lg-10,
+.pliq_col-lg-11,
+.pliq_col-lg-12,
+.pliq_col-lg-2,
+.pliq_col-lg-3,
+.pliq_col-lg-4,
+.pliq_col-lg-5,
+.pliq_col-lg-6,
+.pliq_col-lg-7,
+.pliq_col-lg-8,
+.pliq_col-lg-9,
+.pliq_col-lg-auto,
+.pliq_col-md,
+.pliq_col-md-1,
+.pliq_col-md-10,
+.pliq_col-md-11,
+.pliq_col-md-12,
+.pliq_col-md-2,
+.pliq_col-md-3,
+.pliq_col-md-4,
+.pliq_col-md-5,
+.pliq_col-md-6,
+.pliq_col-md-7,
+.pliq_col-md-8,
+.pliq_col-md-9,
+.pliq_col-md-auto,
+.pliq_col-sm,
+.pliq_col-sm-1,
+.pliq_col-sm-10,
+.pliq_col-sm-11,
+.pliq_col-sm-12,
+.pliq_col-sm-2,
+.pliq_col-sm-3,
+.pliq_col-sm-4,
+.pliq_col-sm-5,
+.pliq_col-sm-6,
+.pliq_col-sm-7,
+.pliq_col-sm-8,
+.pliq_col-sm-9,
+.pliq_col-sm-auto,
+.pliq_col-xl,
+.pliq_col-xl-1,
+.pliq_col-xl-10,
+.pliq_col-xl-11,
+.pliq_col-xl-12,
+.pliq_col-xl-2,
+.pliq_col-xl-3,
+.pliq_col-xl-4,
+.pliq_col-xl-5,
+.pliq_col-xl-6,
+.pliq_col-xl-7,
+.pliq_col-xl-8,
+.pliq_col-xl-9,
+.pliq_col-xl-auto {
+  min-height:1px;
+  padding-left:1rem;
+  padding-right:1rem;
+  position:relative;
+  width:100%
+}
+@media (max-width:768px) {
+  .pliq-modal-bottom-right,
+  .pliq-modal-full-left,
+  .pliq-modal-full-right {
+    bottom:2%;
+    height:94%;
+    left:2%;
+    right:2%;
+    top:2%;
+    width:94%
+  }
+  .pliq_col,
+  .pliq_col-1,
+  .pliq_col-10,
+  .pliq_col-11,
+  .pliq_col-12,
+  .pliq_col-2,
+  .pliq_col-3,
+  .pliq_col-4,
+  .pliq_col-5,
+  .pliq_col-6,
+  .pliq_col-7,
+  .pliq_col-8,
+  .pliq_col-9,
+  .pliq_col-auto,
+  .pliq_col-lg,
+  .pliq_col-lg-1,
+  .pliq_col-lg-10,
+  .pliq_col-lg-11,
+  .pliq_col-lg-12,
+  .pliq_col-lg-2,
+  .pliq_col-lg-3,
+  .pliq_col-lg-4,
+  .pliq_col-lg-5,
+  .pliq_col-lg-6,
+  .pliq_col-lg-7,
+  .pliq_col-lg-8,
+  .pliq_col-lg-9,
+  .pliq_col-lg-auto,
+  .pliq_col-md,
+  .pliq_col-md-1,
+  .pliq_col-md-10,
+  .pliq_col-md-11,
+  .pliq_col-md-12,
+  .pliq_col-md-2,
+  .pliq_col-md-3,
+  .pliq_col-md-4,
+  .pliq_col-md-5,
+  .pliq_col-md-6,
+  .pliq_col-md-7,
+  .pliq_col-md-8,
+  .pliq_col-md-9,
+  .pliq_col-md-auto,
+  .pliq_col-sm,
+  .pliq_col-sm-1,
+  .pliq_col-sm-10,
+  .pliq_col-sm-11,
+  .pliq_col-sm-12,
+  .pliq_col-sm-2,
+  .pliq_col-sm-3,
+  .pliq_col-sm-4,
+  .pliq_col-sm-5,
+  .pliq_col-sm-6,
+  .pliq_col-sm-7,
+  .pliq_col-sm-8,
+  .pliq_col-sm-9,
+  .pliq_col-sm-auto,
+  .pliq_col-xl,
+  .pliq_col-xl-1,
+  .pliq_col-xl-10,
+  .pliq_col-xl-11,
+  .pliq_col-xl-12,
+  .pliq_col-xl-2,
+  .pliq_col-xl-3,
+  .pliq_col-xl-4,
+  .pliq_col-xl-5,
+  .pliq_col-xl-6,
+  .pliq_col-xl-7,
+  .pliq_col-xl-8,
+  .pliq_col-xl-9,
+  .pliq_col-xl-auto {
+    min-height:1px;
+    padding-left:1rem;
+    padding-right:1rem;
+    position:relative;
+    width:100%
+  }
+  .pliq_login-block {
+    margin:0 auto
+  }
+  .pliq-btn-bottom-right {
+    margin-top:17px
+  }
+  .pliq-btn-bottom-right,
+  .pliq-btn-full-right {
+    background-color:#fff;
+    background:transparent;
+    border-radius:50% 0 0 50%;
+    color:#606060;
+    content:"x";
+    cursor:pointer;
+    display:none;
+    font-size:40px;
+    height:40px;
+    left:unset;
+    line-height:18px;
+    padding:12px 0 12px 18px;
+    position:absolute;
+    right:31px;
+    text-align:center;
+    text-decoration:none;
+    top:0;
+    width:40px
+  }
+  .pliq-btn-full-right {
+    box-shadow:unset
+  }
+}

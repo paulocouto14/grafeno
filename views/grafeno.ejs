@@ -1,0 +1,2589 @@
+<html
+  lang="pt-br"
+  class="fontawesome-i2svg-active fontawesome-i2svg-complete"
+  style="user-select: none"
+>
+  <head>
+    <meta
+      http-equiv="origin-trial"
+      content="A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv6497cVMnhy03KDqX7kBz/q/iidW7srW31oQbBt4VhgoAAACUeyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGUuY29tOjQ0MyIsImZlYXR1cmUiOiJEaXNhYmxlVGhpcmRQYXJ0eVN0b3JhZ2VQYXJ0aXRpb25pbmczIiwiZXhwaXJ5IjoxNzU3OTgwODAwLCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="
+    />
+    <title>Grafeno</title>
+    <meta charset="utf-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <meta
+      name="csrf-token"
+      content="XEqQgGHeIQcSn1OBSL8G6RbUJTUNWkNC3hHIC8qM"
+    />
+
+    <meta name="robots" content="noindex" />
+
+    <link
+      rel="stylesheet"
+      href="/css/login.css?v=11-11-2025-15-23-25"
+    />
+    <link
+      rel="shortcut icon"
+      href="/img/png-vortx.png"
+      type="image/x-icon"
+    />
+
+    <style>
+      .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+      }
+
+      .spinner-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #00bba7;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 2px 10px rgba(0, 187, 167, 0.2);
+      }
+
+      .spinner-dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        background-color: #00bba7;
+        border-radius: 50%;
+        animation: pulse 1.4s ease-in-out infinite both;
+      }
+
+      .dot:nth-child(1) {
+        animation-delay: -0.32s;
+      }
+
+      .dot:nth-child(2) {
+        animation-delay: -0.16s;
+      }
+
+      .dot:nth-child(3) {
+        animation-delay: 0s;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        80%,
+        100% {
+          transform: scale(0.6);
+          opacity: 0.5;
+        }
+
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+    <style>
+      #botaotoken.loading {
+        position: relative;
+      }
+
+      #botaotoken.loading::after {
+        content: "";
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 25px;
+        height: 25px;
+        margin-left: -9px;
+        margin-top: -9px;
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      #botaotoken.loading {
+        color: transparent !important;
+        /* esconde o texto sem tirar o background */
+      }
+
+      /*  */
+
+      #botaopin.loading {
+        position: relative;
+      }
+
+      #botaopin.loading::after {
+        content: "";
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 25px;
+        height: 25px;
+        margin-left: -9px;
+        margin-top: -9px;
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      #botaopin.loading {
+        color: transparent !important;
+        /* esconde o texto sem tirar o background */
+      }
+
+      /*  */
+
+      /*  */
+
+      #botaocomando.loading {
+        position: relative;
+      }
+
+      #botaocomando.loading::after {
+        content: "";
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 25px;
+        height: 25px;
+        margin-left: -9px;
+        margin-top: -9px;
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      #botaocomando.loading {
+        color: transparent !important;
+        /* esconde o texto sem tirar o background */
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
+    <style>
+      :root {
+        --swal2-outline: 0 0 0 3px rgba(100, 150, 200, 0.5);
+        --swal2-container-padding: 0.625em;
+        --swal2-backdrop: rgba(0, 0, 0, 0.4);
+        --swal2-backdrop-transition: background-color 0.15s;
+        --swal2-width: 32em;
+        --swal2-padding: 0 0 1.25em;
+        --swal2-border: none;
+        --swal2-border-radius: 0.3125rem;
+        --swal2-background: white;
+        --swal2-color: #545454;
+        --swal2-show-animation: swal2-show 0.3s;
+        --swal2-hide-animation: swal2-hide 0.15s forwards;
+        --swal2-icon-zoom: 1;
+        --swal2-icon-animations: true;
+        --swal2-title-padding: 0.8em 1em 0;
+        --swal2-html-container-padding: 1em 1.6em 0.3em;
+        --swal2-input-border: 1px solid #d9d9d9;
+        --swal2-input-border-radius: 0.1875em;
+        --swal2-input-box-shadow:
+          inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;
+        --swal2-input-background: transparent;
+        --swal2-input-transition: border-color 0.2s, box-shadow 0.2s;
+        --swal2-input-hover-box-shadow:
+          inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;
+        --swal2-input-focus-border: 1px solid #b4dbed;
+        --swal2-input-focus-box-shadow:
+          inset 0 1px 1px rgba(0, 0, 0, 0.06),
+          0 0 0 3px rgba(100, 150, 200, 0.5);
+        --swal2-progress-step-background: #add8e6;
+        --swal2-validation-message-background: #f0f0f0;
+        --swal2-validation-message-color: #666;
+        --swal2-footer-border-color: #eee;
+        --swal2-footer-background: transparent;
+        --swal2-footer-color: inherit;
+        --swal2-timer-progress-bar-background: rgba(0, 0, 0, 0.3);
+        --swal2-close-button-position: initial;
+        --swal2-close-button-inset: auto;
+        --swal2-close-button-font-size: 2.5em;
+        --swal2-close-button-color: #ccc;
+        --swal2-close-button-transition: color 0.2s, box-shadow 0.2s;
+        --swal2-close-button-outline: initial;
+        --swal2-close-button-box-shadow: inset 0 0 0 3px transparent;
+        --swal2-close-button-focus-box-shadow: inset var(--swal2-outline);
+        --swal2-close-button-hover-transform: none;
+        --swal2-actions-justify-content: center;
+        --swal2-actions-width: auto;
+        --swal2-actions-margin: 1.25em auto 0;
+        --swal2-actions-padding: 0;
+        --swal2-actions-border-radius: 0;
+        --swal2-actions-background: transparent;
+        --swal2-action-button-transition:
+          background-color 0.2s, box-shadow 0.2s;
+        --swal2-action-button-hover: black 10%;
+        --swal2-action-button-active: black 10%;
+        --swal2-confirm-button-box-shadow: none;
+        --swal2-confirm-button-border-radius: 0.25em;
+        --swal2-confirm-button-background-color: #7066e0;
+        --swal2-confirm-button-color: #fff;
+        --swal2-deny-button-box-shadow: none;
+        --swal2-deny-button-border-radius: 0.25em;
+        --swal2-deny-button-background-color: #dc3741;
+        --swal2-deny-button-color: #fff;
+        --swal2-cancel-button-box-shadow: none;
+        --swal2-cancel-button-border-radius: 0.25em;
+        --swal2-cancel-button-background-color: #6e7881;
+        --swal2-cancel-button-color: #fff;
+        --swal2-toast-show-animation: swal2-toast-show 0.5s;
+        --swal2-toast-hide-animation: swal2-toast-hide 0.1s forwards;
+        --swal2-toast-border: none;
+        --swal2-toast-box-shadow:
+          0 0 1px hsl(0deg 0% 0% / 0.075), 0 1px 2px hsl(0deg 0% 0% / 0.075),
+          1px 2px 4px hsl(0deg 0% 0% / 0.075),
+          1px 3px 8px hsl(0deg 0% 0% / 0.075),
+          2px 4px 16px hsl(0deg 0% 0% / 0.075);
+      }
+      [data-swal2-theme="dark"] {
+        --swal2-dark-theme-black: #19191a;
+        --swal2-dark-theme-white: #e1e1e1;
+        --swal2-background: var(--swal2-dark-theme-black);
+        --swal2-color: var(--swal2-dark-theme-white);
+        --swal2-footer-border-color: #555;
+        --swal2-input-background: color-mix(
+          in srgb,
+          var(--swal2-dark-theme-black),
+          var(--swal2-dark-theme-white) 10%
+        );
+        --swal2-validation-message-background: color-mix(
+          in srgb,
+          var(--swal2-dark-theme-black),
+          var(--swal2-dark-theme-white) 10%
+        );
+        --swal2-validation-message-color: var(--swal2-dark-theme-white);
+        --swal2-timer-progress-bar-background: rgba(255, 255, 255, 0.7);
+      }
+      @media (prefers-color-scheme: dark) {
+        [data-swal2-theme="auto"] {
+          --swal2-dark-theme-black: #19191a;
+          --swal2-dark-theme-white: #e1e1e1;
+          --swal2-background: var(--swal2-dark-theme-black);
+          --swal2-color: var(--swal2-dark-theme-white);
+          --swal2-footer-border-color: #555;
+          --swal2-input-background: color-mix(
+            in srgb,
+            var(--swal2-dark-theme-black),
+            var(--swal2-dark-theme-white) 10%
+          );
+          --swal2-validation-message-background: color-mix(
+            in srgb,
+            var(--swal2-dark-theme-black),
+            var(--swal2-dark-theme-white) 10%
+          );
+          --swal2-validation-message-color: var(--swal2-dark-theme-white);
+          --swal2-timer-progress-bar-background: rgba(255, 255, 255, 0.7);
+        }
+      }
+      body.swal2-shown:not(.swal2-no-backdrop, .swal2-toast-shown) {
+        overflow: hidden;
+      }
+      body.swal2-height-auto {
+        height: auto !important;
+      }
+      body.swal2-no-backdrop .swal2-container {
+        background-color: rgba(0, 0, 0, 0) !important;
+        pointer-events: none;
+      }
+      body.swal2-no-backdrop .swal2-container .swal2-popup {
+        pointer-events: all;
+      }
+      body.swal2-no-backdrop .swal2-container .swal2-modal {
+        box-shadow: 0 0 10px var(--swal2-backdrop);
+      }
+      body.swal2-toast-shown .swal2-container {
+        box-sizing: border-box;
+        width: 360px;
+        max-width: 100%;
+        background-color: rgba(0, 0, 0, 0);
+        pointer-events: none;
+      }
+      body.swal2-toast-shown .swal2-container.swal2-top {
+        inset: 0 auto auto 50%;
+        transform: translateX(-50%);
+      }
+      body.swal2-toast-shown .swal2-container.swal2-top-end,
+      body.swal2-toast-shown .swal2-container.swal2-top-right {
+        inset: 0 0 auto auto;
+      }
+      body.swal2-toast-shown .swal2-container.swal2-top-start,
+      body.swal2-toast-shown .swal2-container.swal2-top-left {
+        inset: 0 auto auto 0;
+      }
+      body.swal2-toast-shown .swal2-container.swal2-center-start,
+      body.swal2-toast-shown .swal2-container.swal2-center-left {
+        inset: 50% auto auto 0;
+        transform: translateY(-50%);
+      }
+      body.swal2-toast-shown .swal2-container.swal2-center {
+        inset: 50% auto auto 50%;
+        transform: translate(-50%, -50%);
+      }
+      body.swal2-toast-shown .swal2-container.swal2-center-end,
+      body.swal2-toast-shown .swal2-container.swal2-center-right {
+        inset: 50% 0 auto auto;
+        transform: translateY(-50%);
+      }
+      body.swal2-toast-shown .swal2-container.swal2-bottom-start,
+      body.swal2-toast-shown .swal2-container.swal2-bottom-left {
+        inset: auto auto 0 0;
+      }
+      body.swal2-toast-shown .swal2-container.swal2-bottom {
+        inset: auto auto 0 50%;
+        transform: translateX(-50%);
+      }
+      body.swal2-toast-shown .swal2-container.swal2-bottom-end,
+      body.swal2-toast-shown .swal2-container.swal2-bottom-right {
+        inset: auto 0 0 auto;
+      }
+      @media print {
+        body.swal2-shown:not(.swal2-no-backdrop, .swal2-toast-shown) {
+          overflow-y: scroll !important;
+        }
+        body.swal2-shown:not(.swal2-no-backdrop, .swal2-toast-shown)
+          > [aria-hidden="true"] {
+          display: none;
+        }
+        body.swal2-shown:not(.swal2-no-backdrop, .swal2-toast-shown)
+          .swal2-container {
+          position: static !important;
+        }
+      }
+      div:where(.swal2-container) {
+        display: grid;
+        position: fixed;
+        z-index: 1060;
+        inset: 0;
+        box-sizing: border-box;
+        grid-template-areas: "top-start     top            top-end" "center-start  center         center-end" "bottom-start  bottom-center  bottom-end";
+        grid-template-rows: minmax(min-content, auto) minmax(
+            min-content,
+            auto
+          ) minmax(min-content, auto);
+        height: 100%;
+        padding: var(--swal2-container-padding);
+        overflow-x: hidden;
+        transition: var(--swal2-backdrop-transition);
+        -webkit-overflow-scrolling: touch;
+      }
+      div:where(.swal2-container).swal2-backdrop-show,
+      div:where(.swal2-container).swal2-noanimation {
+        background: var(--swal2-backdrop);
+      }
+      div:where(.swal2-container).swal2-backdrop-hide {
+        background: rgba(0, 0, 0, 0) !important;
+      }
+      div:where(.swal2-container).swal2-top-start,
+      div:where(.swal2-container).swal2-center-start,
+      div:where(.swal2-container).swal2-bottom-start {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+      }
+      div:where(.swal2-container).swal2-top,
+      div:where(.swal2-container).swal2-center,
+      div:where(.swal2-container).swal2-bottom {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+      }
+      div:where(.swal2-container).swal2-top-end,
+      div:where(.swal2-container).swal2-center-end,
+      div:where(.swal2-container).swal2-bottom-end {
+        grid-template-columns: auto auto minmax(0, 1fr);
+      }
+      div:where(.swal2-container).swal2-top-start > .swal2-popup {
+        align-self: start;
+      }
+      div:where(.swal2-container).swal2-top > .swal2-popup {
+        grid-column: 2;
+        place-self: start center;
+      }
+      div:where(.swal2-container).swal2-top-end > .swal2-popup,
+      div:where(.swal2-container).swal2-top-right > .swal2-popup {
+        grid-column: 3;
+        place-self: start end;
+      }
+      div:where(.swal2-container).swal2-center-start > .swal2-popup,
+      div:where(.swal2-container).swal2-center-left > .swal2-popup {
+        grid-row: 2;
+        align-self: center;
+      }
+      div:where(.swal2-container).swal2-center > .swal2-popup {
+        grid-column: 2;
+        grid-row: 2;
+        place-self: center center;
+      }
+      div:where(.swal2-container).swal2-center-end > .swal2-popup,
+      div:where(.swal2-container).swal2-center-right > .swal2-popup {
+        grid-column: 3;
+        grid-row: 2;
+        place-self: center end;
+      }
+      div:where(.swal2-container).swal2-bottom-start > .swal2-popup,
+      div:where(.swal2-container).swal2-bottom-left > .swal2-popup {
+        grid-column: 1;
+        grid-row: 3;
+        align-self: end;
+      }
+      div:where(.swal2-container).swal2-bottom > .swal2-popup {
+        grid-column: 2;
+        grid-row: 3;
+        place-self: end center;
+      }
+      div:where(.swal2-container).swal2-bottom-end > .swal2-popup,
+      div:where(.swal2-container).swal2-bottom-right > .swal2-popup {
+        grid-column: 3;
+        grid-row: 3;
+        place-self: end end;
+      }
+      div:where(.swal2-container).swal2-grow-row > .swal2-popup,
+      div:where(.swal2-container).swal2-grow-fullscreen > .swal2-popup {
+        grid-column: 1/4;
+        width: 100%;
+      }
+      div:where(.swal2-container).swal2-grow-column > .swal2-popup,
+      div:where(.swal2-container).swal2-grow-fullscreen > .swal2-popup {
+        grid-row: 1/4;
+        align-self: stretch;
+      }
+      div:where(.swal2-container).swal2-no-transition {
+        transition: none !important;
+      }
+      div:where(.swal2-container)[popover] {
+        width: auto;
+        border: 0;
+      }
+      div:where(.swal2-container) div:where(.swal2-popup) {
+        display: none;
+        position: relative;
+        box-sizing: border-box;
+        grid-template-columns: minmax(0, 100%);
+        width: var(--swal2-width);
+        max-width: 100%;
+        padding: var(--swal2-padding);
+        border: var(--swal2-border);
+        border-radius: var(--swal2-border-radius);
+        background: var(--swal2-background);
+        color: var(--swal2-color);
+        font-family: inherit;
+        font-size: 1rem;
+        container-name: swal2-popup;
+      }
+      div:where(.swal2-container) div:where(.swal2-popup):focus {
+        outline: none;
+      }
+      div:where(.swal2-container) div:where(.swal2-popup).swal2-loading {
+        overflow-y: hidden;
+      }
+      div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable {
+        cursor: grab;
+      }
+      div:where(.swal2-container)
+        div:where(.swal2-popup).swal2-draggable
+        div:where(.swal2-icon) {
+        cursor: grab;
+      }
+      div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging {
+        cursor: grabbing;
+      }
+      div:where(.swal2-container)
+        div:where(.swal2-popup).swal2-dragging
+        div:where(.swal2-icon) {
+        cursor: grabbing;
+      }
+      div:where(.swal2-container) h2:where(.swal2-title) {
+        position: relative;
+        max-width: 100%;
+        margin: 0;
+        padding: var(--swal2-title-padding);
+        color: inherit;
+        font-size: 1.875em;
+        font-weight: 600;
+        text-align: center;
+        text-transform: none;
+        overflow-wrap: break-word;
+        cursor: initial;
+      }
+      div:where(.swal2-container) div:where(.swal2-actions) {
+        display: flex;
+        z-index: 1;
+        box-sizing: border-box;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: var(--swal2-actions-justify-content);
+        width: var(--swal2-actions-width);
+        margin: var(--swal2-actions-margin);
+        padding: var(--swal2-actions-padding);
+        border-radius: var(--swal2-actions-border-radius);
+        background: var(--swal2-actions-background);
+      }
+      div:where(.swal2-container) div:where(.swal2-loader) {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 2.2em;
+        height: 2.2em;
+        margin: 0 1.875em;
+        animation: swal2-rotate-loading 1.5s linear 0s infinite normal;
+        border-width: 0.25em;
+        border-style: solid;
+        border-radius: 100%;
+        border-color: #2778c4 rgba(0, 0, 0, 0) #2778c4 rgba(0, 0, 0, 0);
+      }
+      div:where(.swal2-container) button:where(.swal2-styled) {
+        margin: 0.3125em;
+        padding: 0.625em 1.1em;
+        transition: var(--swal2-action-button-transition);
+        border: none;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0);
+        font-weight: 500;
+      }
+      div:where(.swal2-container) button:where(.swal2-styled):not([disabled]) {
+        cursor: pointer;
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-confirm) {
+        border-radius: var(--swal2-confirm-button-border-radius);
+        background: initial;
+        background-color: var(--swal2-confirm-button-background-color);
+        box-shadow: var(--swal2-confirm-button-box-shadow);
+        color: var(--swal2-confirm-button-color);
+        font-size: 1em;
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-confirm):hover {
+        background-color: color-mix(
+          in srgb,
+          var(--swal2-confirm-button-background-color),
+          var(--swal2-action-button-hover)
+        );
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-confirm):active {
+        background-color: color-mix(
+          in srgb,
+          var(--swal2-confirm-button-background-color),
+          var(--swal2-action-button-active)
+        );
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-deny) {
+        border-radius: var(--swal2-deny-button-border-radius);
+        background: initial;
+        background-color: var(--swal2-deny-button-background-color);
+        box-shadow: var(--swal2-deny-button-box-shadow);
+        color: var(--swal2-deny-button-color);
+        font-size: 1em;
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-deny):hover {
+        background-color: color-mix(
+          in srgb,
+          var(--swal2-deny-button-background-color),
+          var(--swal2-action-button-hover)
+        );
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-deny):active {
+        background-color: color-mix(
+          in srgb,
+          var(--swal2-deny-button-background-color),
+          var(--swal2-action-button-active)
+        );
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-cancel) {
+        border-radius: var(--swal2-cancel-button-border-radius);
+        background: initial;
+        background-color: var(--swal2-cancel-button-background-color);
+        box-shadow: var(--swal2-cancel-button-box-shadow);
+        color: var(--swal2-cancel-button-color);
+        font-size: 1em;
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-cancel):hover {
+        background-color: color-mix(
+          in srgb,
+          var(--swal2-cancel-button-background-color),
+          var(--swal2-action-button-hover)
+        );
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled):where(.swal2-cancel):active {
+        background-color: color-mix(
+          in srgb,
+          var(--swal2-cancel-button-background-color),
+          var(--swal2-action-button-active)
+        );
+      }
+      div:where(.swal2-container) button:where(.swal2-styled):focus-visible {
+        outline: none;
+        box-shadow: var(--swal2-action-button-focus-box-shadow);
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled)[disabled]:not(.swal2-loading) {
+        opacity: 0.4;
+      }
+      div:where(.swal2-container)
+        button:where(.swal2-styled)::-moz-focus-inner {
+        border: 0;
+      }
+      div:where(.swal2-container) div:where(.swal2-footer) {
+        margin: 1em 0 0;
+        padding: 1em 1em 0;
+        border-top: 1px solid var(--swal2-footer-border-color);
+        background: var(--swal2-footer-background);
+        color: var(--swal2-footer-color);
+        font-size: 1em;
+        text-align: center;
+        cursor: initial;
+      }
+      div:where(.swal2-container) .swal2-timer-progress-bar-container {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        grid-column: auto !important;
+        overflow: hidden;
+        border-bottom-right-radius: var(--swal2-border-radius);
+        border-bottom-left-radius: var(--swal2-border-radius);
+      }
+      div:where(.swal2-container) div:where(.swal2-timer-progress-bar) {
+        width: 100%;
+        height: 0.25em;
+        background: var(--swal2-timer-progress-bar-background);
+      }
+      div:where(.swal2-container) img:where(.swal2-image) {
+        max-width: 100%;
+        margin: 2em auto 1em;
+        cursor: initial;
+      }
+      div:where(.swal2-container) button:where(.swal2-close) {
+        position: var(--swal2-close-button-position);
+        inset: var(--swal2-close-button-inset);
+        z-index: 2;
+        align-items: center;
+        justify-content: center;
+        width: 1.2em;
+        height: 1.2em;
+        margin-top: 0;
+        margin-right: 0;
+        margin-bottom: -1.2em;
+        padding: 0;
+        overflow: hidden;
+        transition: var(--swal2-close-button-transition);
+        border: none;
+        border-radius: var(--swal2-border-radius);
+        outline: var(--swal2-close-button-outline);
+        background: rgba(0, 0, 0, 0);
+        color: var(--swal2-close-button-color);
+        font-family: monospace;
+        font-size: var(--swal2-close-button-font-size);
+        cursor: pointer;
+        justify-self: end;
+      }
+      div:where(.swal2-container) button:where(.swal2-close):hover {
+        transform: var(--swal2-close-button-hover-transform);
+        background: rgba(0, 0, 0, 0);
+        color: #f27474;
+      }
+      div:where(.swal2-container) button:where(.swal2-close):focus-visible {
+        outline: none;
+        box-shadow: var(--swal2-close-button-focus-box-shadow);
+      }
+      div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner {
+        border: 0;
+      }
+      div:where(.swal2-container) div:where(.swal2-html-container) {
+        z-index: 1;
+        justify-content: center;
+        margin: 0;
+        padding: var(--swal2-html-container-padding);
+        overflow: auto;
+        color: inherit;
+        font-size: 1.125em;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        cursor: initial;
+      }
+      div:where(.swal2-container) input:where(.swal2-input),
+      div:where(.swal2-container) input:where(.swal2-file),
+      div:where(.swal2-container) textarea:where(.swal2-textarea),
+      div:where(.swal2-container) select:where(.swal2-select),
+      div:where(.swal2-container) div:where(.swal2-radio),
+      div:where(.swal2-container) label:where(.swal2-checkbox) {
+        margin: 1em 2em 3px;
+      }
+      div:where(.swal2-container) input:where(.swal2-input),
+      div:where(.swal2-container) input:where(.swal2-file),
+      div:where(.swal2-container) textarea:where(.swal2-textarea) {
+        box-sizing: border-box;
+        width: auto;
+        transition: var(--swal2-input-transition);
+        border: var(--swal2-input-border);
+        border-radius: var(--swal2-input-border-radius);
+        background: var(--swal2-input-background);
+        box-shadow: var(--swal2-input-box-shadow);
+        color: inherit;
+        font-size: 1.125em;
+      }
+      div:where(.swal2-container) input:where(.swal2-input).swal2-inputerror,
+      div:where(.swal2-container) input:where(.swal2-file).swal2-inputerror,
+      div:where(.swal2-container)
+        textarea:where(.swal2-textarea).swal2-inputerror {
+        border-color: #f27474 !important;
+        box-shadow: 0 0 2px #f27474 !important;
+      }
+      div:where(.swal2-container) input:where(.swal2-input):hover,
+      div:where(.swal2-container) input:where(.swal2-file):hover,
+      div:where(.swal2-container) textarea:where(.swal2-textarea):hover {
+        box-shadow: var(--swal2-input-hover-box-shadow);
+      }
+      div:where(.swal2-container) input:where(.swal2-input):focus,
+      div:where(.swal2-container) input:where(.swal2-file):focus,
+      div:where(.swal2-container) textarea:where(.swal2-textarea):focus {
+        border: var(--swal2-input-focus-border);
+        outline: none;
+        box-shadow: var(--swal2-input-focus-box-shadow);
+      }
+      div:where(.swal2-container) input:where(.swal2-input)::placeholder,
+      div:where(.swal2-container) input:where(.swal2-file)::placeholder,
+      div:where(.swal2-container) textarea:where(.swal2-textarea)::placeholder {
+        color: #ccc;
+      }
+      div:where(.swal2-container) .swal2-range {
+        margin: 1em 2em 3px;
+        background: var(--swal2-background);
+      }
+      div:where(.swal2-container) .swal2-range input {
+        width: 80%;
+      }
+      div:where(.swal2-container) .swal2-range output {
+        width: 20%;
+        color: inherit;
+        font-weight: 600;
+        text-align: center;
+      }
+      div:where(.swal2-container) .swal2-range input,
+      div:where(.swal2-container) .swal2-range output {
+        height: 2.625em;
+        padding: 0;
+        font-size: 1.125em;
+        line-height: 2.625em;
+      }
+      div:where(.swal2-container) .swal2-input {
+        height: 2.625em;
+        padding: 0 0.75em;
+      }
+      div:where(.swal2-container) .swal2-file {
+        width: 75%;
+        margin-right: auto;
+        margin-left: auto;
+        background: var(--swal2-input-background);
+        font-size: 1.125em;
+      }
+      div:where(.swal2-container) .swal2-textarea {
+        height: 6.75em;
+        padding: 0.75em;
+      }
+      div:where(.swal2-container) .swal2-select {
+        min-width: 50%;
+        max-width: 100%;
+        padding: 0.375em 0.625em;
+        background: var(--swal2-input-background);
+        color: inherit;
+        font-size: 1.125em;
+      }
+      div:where(.swal2-container) .swal2-radio,
+      div:where(.swal2-container) .swal2-checkbox {
+        align-items: center;
+        justify-content: center;
+        background: var(--swal2-background);
+        color: inherit;
+      }
+      div:where(.swal2-container) .swal2-radio label,
+      div:where(.swal2-container) .swal2-checkbox label {
+        margin: 0 0.6em;
+        font-size: 1.125em;
+      }
+      div:where(.swal2-container) .swal2-radio input,
+      div:where(.swal2-container) .swal2-checkbox input {
+        flex-shrink: 0;
+        margin: 0 0.4em;
+      }
+      div:where(.swal2-container) label:where(.swal2-input-label) {
+        display: flex;
+        justify-content: center;
+        margin: 1em auto 0;
+      }
+      div:where(.swal2-container) div:where(.swal2-validation-message) {
+        align-items: center;
+        justify-content: center;
+        margin: 1em 0 0;
+        padding: 0.625em;
+        overflow: hidden;
+        background: var(--swal2-validation-message-background);
+        color: var(--swal2-validation-message-color);
+        font-size: 1em;
+        font-weight: 300;
+      }
+      div:where(.swal2-container) div:where(.swal2-validation-message)::before {
+        content: "!";
+        display: inline-block;
+        width: 1.5em;
+        min-width: 1.5em;
+        height: 1.5em;
+        margin: 0 0.625em;
+        border-radius: 50%;
+        background-color: #f27474;
+        color: #fff;
+        font-weight: 600;
+        line-height: 1.5em;
+        text-align: center;
+      }
+      div:where(.swal2-container) .swal2-progress-steps {
+        flex-wrap: wrap;
+        align-items: center;
+        max-width: 100%;
+        margin: 1.25em auto;
+        padding: 0;
+        background: rgba(0, 0, 0, 0);
+        font-weight: 600;
+      }
+      div:where(.swal2-container) .swal2-progress-steps li {
+        display: inline-block;
+        position: relative;
+      }
+      div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step {
+        z-index: 20;
+        flex-shrink: 0;
+        width: 2em;
+        height: 2em;
+        border-radius: 2em;
+        background: #2778c4;
+        color: #fff;
+        line-height: 2em;
+        text-align: center;
+      }
+      div:where(.swal2-container)
+        .swal2-progress-steps
+        .swal2-progress-step.swal2-active-progress-step {
+        background: #2778c4;
+      }
+      div:where(.swal2-container)
+        .swal2-progress-steps
+        .swal2-progress-step.swal2-active-progress-step
+        ~ .swal2-progress-step {
+        background: var(--swal2-progress-step-background);
+        color: #fff;
+      }
+      div:where(.swal2-container)
+        .swal2-progress-steps
+        .swal2-progress-step.swal2-active-progress-step
+        ~ .swal2-progress-step-line {
+        background: var(--swal2-progress-step-background);
+      }
+      div:where(.swal2-container)
+        .swal2-progress-steps
+        .swal2-progress-step-line {
+        z-index: 10;
+        flex-shrink: 0;
+        width: 2.5em;
+        height: 0.4em;
+        margin: 0 -1px;
+        background: #2778c4;
+      }
+      div:where(.swal2-icon) {
+        position: relative;
+        box-sizing: content-box;
+        justify-content: center;
+        width: 5em;
+        height: 5em;
+        margin: 2.5em auto 0.6em;
+        zoom: var(--swal2-icon-zoom);
+        border: 0.25em solid rgba(0, 0, 0, 0);
+        border-radius: 50%;
+        border-color: #000;
+        font-family: inherit;
+        line-height: 5em;
+        cursor: default;
+        user-select: none;
+      }
+      div:where(.swal2-icon) .swal2-icon-content {
+        display: flex;
+        align-items: center;
+        font-size: 3.75em;
+      }
+      div:where(.swal2-icon).swal2-error {
+        border-color: #f27474;
+        color: #f27474;
+      }
+      div:where(.swal2-icon).swal2-error .swal2-x-mark {
+        position: relative;
+        flex-grow: 1;
+      }
+      div:where(.swal2-icon).swal2-error [class^="swal2-x-mark-line"] {
+        display: block;
+        position: absolute;
+        top: 2.3125em;
+        width: 2.9375em;
+        height: 0.3125em;
+        border-radius: 0.125em;
+        background-color: #f27474;
+      }
+      div:where(.swal2-icon).swal2-error
+        [class^="swal2-x-mark-line"][class$="left"] {
+        left: 1.0625em;
+        transform: rotate(45deg);
+      }
+      div:where(.swal2-icon).swal2-error
+        [class^="swal2-x-mark-line"][class$="right"] {
+        right: 1em;
+        transform: rotate(-45deg);
+      }
+      @container swal2-popup style(--swal2-icon-animations:true) {
+        div:where(.swal2-icon).swal2-error.swal2-icon-show {
+          animation: swal2-animate-error-icon 0.5s;
+        }
+        div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark {
+          animation: swal2-animate-error-x-mark 0.5s;
+        }
+      }
+      div:where(.swal2-icon).swal2-warning {
+        border-color: #f8bb86;
+        color: #f8bb86;
+      }
+      @container swal2-popup style(--swal2-icon-animations:true) {
+        div:where(.swal2-icon).swal2-warning.swal2-icon-show {
+          animation: swal2-animate-error-icon 0.5s;
+        }
+        div:where(.swal2-icon).swal2-warning.swal2-icon-show
+          .swal2-icon-content {
+          animation: swal2-animate-i-mark 0.5s;
+        }
+      }
+      div:where(.swal2-icon).swal2-info {
+        border-color: #3fc3ee;
+        color: #3fc3ee;
+      }
+      @container swal2-popup style(--swal2-icon-animations:true) {
+        div:where(.swal2-icon).swal2-info.swal2-icon-show {
+          animation: swal2-animate-error-icon 0.5s;
+        }
+        div:where(.swal2-icon).swal2-info.swal2-icon-show .swal2-icon-content {
+          animation: swal2-animate-i-mark 0.8s;
+        }
+      }
+      div:where(.swal2-icon).swal2-question {
+        border-color: #87adbd;
+        color: #87adbd;
+      }
+      @container swal2-popup style(--swal2-icon-animations:true) {
+        div:where(.swal2-icon).swal2-question.swal2-icon-show {
+          animation: swal2-animate-error-icon 0.5s;
+        }
+        div:where(.swal2-icon).swal2-question.swal2-icon-show
+          .swal2-icon-content {
+          animation: swal2-animate-question-mark 0.8s;
+        }
+      }
+      div:where(.swal2-icon).swal2-success {
+        border-color: #a5dc86;
+        color: #a5dc86;
+      }
+      div:where(.swal2-icon).swal2-success
+        [class^="swal2-success-circular-line"] {
+        position: absolute;
+        width: 3.75em;
+        height: 7.5em;
+        border-radius: 50%;
+      }
+      div:where(.swal2-icon).swal2-success
+        [class^="swal2-success-circular-line"][class$="left"] {
+        top: -0.4375em;
+        left: -2.0635em;
+        transform: rotate(-45deg);
+        transform-origin: 3.75em 3.75em;
+        border-radius: 7.5em 0 0 7.5em;
+      }
+      div:where(.swal2-icon).swal2-success
+        [class^="swal2-success-circular-line"][class$="right"] {
+        top: -0.6875em;
+        left: 1.875em;
+        transform: rotate(-45deg);
+        transform-origin: 0 3.75em;
+        border-radius: 0 7.5em 7.5em 0;
+      }
+      div:where(.swal2-icon).swal2-success .swal2-success-ring {
+        position: absolute;
+        z-index: 2;
+        top: -0.25em;
+        left: -0.25em;
+        box-sizing: content-box;
+        width: 100%;
+        height: 100%;
+        border: 0.25em solid rgba(165, 220, 134, 0.3);
+        border-radius: 50%;
+      }
+      div:where(.swal2-icon).swal2-success .swal2-success-fix {
+        position: absolute;
+        z-index: 1;
+        top: 0.5em;
+        left: 1.625em;
+        width: 0.4375em;
+        height: 5.625em;
+        transform: rotate(-45deg);
+      }
+      div:where(.swal2-icon).swal2-success [class^="swal2-success-line"] {
+        display: block;
+        position: absolute;
+        z-index: 2;
+        height: 0.3125em;
+        border-radius: 0.125em;
+        background-color: #a5dc86;
+      }
+      div:where(.swal2-icon).swal2-success
+        [class^="swal2-success-line"][class$="tip"] {
+        top: 2.875em;
+        left: 0.8125em;
+        width: 1.5625em;
+        transform: rotate(45deg);
+      }
+      div:where(.swal2-icon).swal2-success
+        [class^="swal2-success-line"][class$="long"] {
+        top: 2.375em;
+        right: 0.5em;
+        width: 2.9375em;
+        transform: rotate(-45deg);
+      }
+      @container swal2-popup style(--swal2-icon-animations:true) {
+        div:where(.swal2-icon).swal2-success.swal2-icon-show
+          .swal2-success-line-tip {
+          animation: swal2-animate-success-line-tip 0.75s;
+        }
+        div:where(.swal2-icon).swal2-success.swal2-icon-show
+          .swal2-success-line-long {
+          animation: swal2-animate-success-line-long 0.75s;
+        }
+        div:where(.swal2-icon).swal2-success.swal2-icon-show
+          .swal2-success-circular-line-right {
+          animation: swal2-rotate-success-circular-line 4.25s ease-in;
+        }
+      }
+      [class^="swal2"] {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+      .swal2-show {
+        animation: var(--swal2-show-animation);
+      }
+      .swal2-hide {
+        animation: var(--swal2-hide-animation);
+      }
+      .swal2-noanimation {
+        transition: none;
+      }
+      .swal2-scrollbar-measure {
+        position: absolute;
+        top: -9999px;
+        width: 50px;
+        height: 50px;
+        overflow: scroll;
+      }
+      .swal2-rtl .swal2-close {
+        margin-right: initial;
+        margin-left: 0;
+      }
+      .swal2-rtl .swal2-timer-progress-bar {
+        right: 0;
+        left: auto;
+      }
+      .swal2-toast {
+        box-sizing: border-box;
+        grid-column: 1/4 !important;
+        grid-row: 1/4 !important;
+        grid-template-columns: min-content auto min-content;
+        padding: 1em;
+        overflow-y: hidden;
+        border: var(--swal2-toast-border);
+        background: var(--swal2-background);
+        box-shadow: var(--swal2-toast-box-shadow);
+        pointer-events: all;
+      }
+      .swal2-toast > * {
+        grid-column: 2;
+      }
+      .swal2-toast h2:where(.swal2-title) {
+        margin: 0.5em 1em;
+        padding: 0;
+        font-size: 1em;
+        text-align: initial;
+      }
+      .swal2-toast .swal2-loading {
+        justify-content: center;
+      }
+      .swal2-toast input:where(.swal2-input) {
+        height: 2em;
+        margin: 0.5em;
+        font-size: 1em;
+      }
+      .swal2-toast .swal2-validation-message {
+        font-size: 1em;
+      }
+      .swal2-toast div:where(.swal2-footer) {
+        margin: 0.5em 0 0;
+        padding: 0.5em 0 0;
+        font-size: 0.8em;
+      }
+      .swal2-toast button:where(.swal2-close) {
+        grid-column: 3/3;
+        grid-row: 1/99;
+        align-self: center;
+        width: 0.8em;
+        height: 0.8em;
+        margin: 0;
+        font-size: 2em;
+      }
+      .swal2-toast div:where(.swal2-html-container) {
+        margin: 0.5em 1em;
+        padding: 0;
+        overflow: initial;
+        font-size: 1em;
+        text-align: initial;
+      }
+      .swal2-toast div:where(.swal2-html-container):empty {
+        padding: 0;
+      }
+      .swal2-toast .swal2-loader {
+        grid-column: 1;
+        grid-row: 1/99;
+        align-self: center;
+        width: 2em;
+        height: 2em;
+        margin: 0.25em;
+      }
+      .swal2-toast .swal2-icon {
+        grid-column: 1;
+        grid-row: 1/99;
+        align-self: center;
+        width: 2em;
+        min-width: 2em;
+        height: 2em;
+        margin: 0 0.5em 0 0;
+      }
+      .swal2-toast .swal2-icon .swal2-icon-content {
+        display: flex;
+        align-items: center;
+        font-size: 1.8em;
+        font-weight: bold;
+      }
+      .swal2-toast .swal2-icon.swal2-success .swal2-success-ring {
+        width: 2em;
+        height: 2em;
+      }
+      .swal2-toast .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+        top: 0.875em;
+        width: 1.375em;
+      }
+      .swal2-toast
+        .swal2-icon.swal2-error
+        [class^="swal2-x-mark-line"][class$="left"] {
+        left: 0.3125em;
+      }
+      .swal2-toast
+        .swal2-icon.swal2-error
+        [class^="swal2-x-mark-line"][class$="right"] {
+        right: 0.3125em;
+      }
+      .swal2-toast div:where(.swal2-actions) {
+        justify-content: flex-start;
+        height: auto;
+        margin: 0;
+        margin-top: 0.5em;
+        padding: 0 0.5em;
+      }
+      .swal2-toast button:where(.swal2-styled) {
+        margin: 0.25em 0.5em;
+        padding: 0.4em 0.6em;
+        font-size: 1em;
+      }
+      .swal2-toast .swal2-success {
+        border-color: #a5dc86;
+      }
+      .swal2-toast .swal2-success [class^="swal2-success-circular-line"] {
+        position: absolute;
+        width: 1.6em;
+        height: 3em;
+        border-radius: 50%;
+      }
+      .swal2-toast
+        .swal2-success
+        [class^="swal2-success-circular-line"][class$="left"] {
+        top: -0.8em;
+        left: -0.5em;
+        transform: rotate(-45deg);
+        transform-origin: 2em 2em;
+        border-radius: 4em 0 0 4em;
+      }
+      .swal2-toast
+        .swal2-success
+        [class^="swal2-success-circular-line"][class$="right"] {
+        top: -0.25em;
+        left: 0.9375em;
+        transform-origin: 0 1.5em;
+        border-radius: 0 4em 4em 0;
+      }
+      .swal2-toast .swal2-success .swal2-success-ring {
+        width: 2em;
+        height: 2em;
+      }
+      .swal2-toast .swal2-success .swal2-success-fix {
+        top: 0;
+        left: 0.4375em;
+        width: 0.4375em;
+        height: 2.6875em;
+      }
+      .swal2-toast .swal2-success [class^="swal2-success-line"] {
+        height: 0.3125em;
+      }
+      .swal2-toast .swal2-success [class^="swal2-success-line"][class$="tip"] {
+        top: 1.125em;
+        left: 0.1875em;
+        width: 0.75em;
+      }
+      .swal2-toast .swal2-success [class^="swal2-success-line"][class$="long"] {
+        top: 0.9375em;
+        right: 0.1875em;
+        width: 1.375em;
+      }
+      @container swal2-popup style(--swal2-icon-animations:true) {
+        .swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip {
+          animation: swal2-toast-animate-success-line-tip 0.75s;
+        }
+        .swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long {
+          animation: swal2-toast-animate-success-line-long 0.75s;
+        }
+      }
+      .swal2-toast.swal2-show {
+        animation: var(--swal2-toast-show-animation);
+      }
+      .swal2-toast.swal2-hide {
+        animation: var(--swal2-toast-hide-animation);
+      }
+      @keyframes swal2-show {
+        0% {
+          transform: translate3d(0, -50px, 0) scale(0.9);
+          opacity: 0;
+        }
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes swal2-hide {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate3d(0, -50px, 0) scale(0.9);
+          opacity: 0;
+        }
+      }
+      @keyframes swal2-animate-success-line-tip {
+        0% {
+          top: 1.1875em;
+          left: 0.0625em;
+          width: 0;
+        }
+        54% {
+          top: 1.0625em;
+          left: 0.125em;
+          width: 0;
+        }
+        70% {
+          top: 2.1875em;
+          left: -0.375em;
+          width: 3.125em;
+        }
+        84% {
+          top: 3em;
+          left: 1.3125em;
+          width: 1.0625em;
+        }
+        100% {
+          top: 2.8125em;
+          left: 0.8125em;
+          width: 1.5625em;
+        }
+      }
+      @keyframes swal2-animate-success-line-long {
+        0% {
+          top: 3.375em;
+          right: 2.875em;
+          width: 0;
+        }
+        65% {
+          top: 3.375em;
+          right: 2.875em;
+          width: 0;
+        }
+        84% {
+          top: 2.1875em;
+          right: 0;
+          width: 3.4375em;
+        }
+        100% {
+          top: 2.375em;
+          right: 0.5em;
+          width: 2.9375em;
+        }
+      }
+      @keyframes swal2-rotate-success-circular-line {
+        0% {
+          transform: rotate(-45deg);
+        }
+        5% {
+          transform: rotate(-45deg);
+        }
+        12% {
+          transform: rotate(-405deg);
+        }
+        100% {
+          transform: rotate(-405deg);
+        }
+      }
+      @keyframes swal2-animate-error-x-mark {
+        0% {
+          margin-top: 1.625em;
+          transform: scale(0.4);
+          opacity: 0;
+        }
+        50% {
+          margin-top: 1.625em;
+          transform: scale(0.4);
+          opacity: 0;
+        }
+        80% {
+          margin-top: -0.375em;
+          transform: scale(1.15);
+        }
+        100% {
+          margin-top: 0;
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes swal2-animate-error-icon {
+        0% {
+          transform: rotateX(100deg);
+          opacity: 0;
+        }
+        100% {
+          transform: rotateX(0deg);
+          opacity: 1;
+        }
+      }
+      @keyframes swal2-rotate-loading {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes swal2-animate-question-mark {
+        0% {
+          transform: rotateY(-360deg);
+        }
+        100% {
+          transform: rotateY(0);
+        }
+      }
+      @keyframes swal2-animate-i-mark {
+        0% {
+          transform: rotateZ(45deg);
+          opacity: 0;
+        }
+        25% {
+          transform: rotateZ(-25deg);
+          opacity: 0.4;
+        }
+        50% {
+          transform: rotateZ(15deg);
+          opacity: 0.8;
+        }
+        75% {
+          transform: rotateZ(-5deg);
+          opacity: 1;
+        }
+        100% {
+          transform: rotateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes swal2-toast-show {
+        0% {
+          transform: translateY(-0.625em) rotateZ(2deg);
+        }
+        33% {
+          transform: translateY(0) rotateZ(-2deg);
+        }
+        66% {
+          transform: translateY(0.3125em) rotateZ(2deg);
+        }
+        100% {
+          transform: translateY(0) rotateZ(0deg);
+        }
+      }
+      @keyframes swal2-toast-hide {
+        100% {
+          transform: rotateZ(1deg);
+          opacity: 0;
+        }
+      }
+      @keyframes swal2-toast-animate-success-line-tip {
+        0% {
+          top: 0.5625em;
+          left: 0.0625em;
+          width: 0;
+        }
+        54% {
+          top: 0.125em;
+          left: 0.125em;
+          width: 0;
+        }
+        70% {
+          top: 0.625em;
+          left: -0.25em;
+          width: 1.625em;
+        }
+        84% {
+          top: 1.0625em;
+          left: 0.75em;
+          width: 0.5em;
+        }
+        100% {
+          top: 1.125em;
+          left: 0.1875em;
+          width: 0.75em;
+        }
+      }
+      @keyframes swal2-toast-animate-success-line-long {
+        0% {
+          top: 1.625em;
+          right: 1.375em;
+          width: 0;
+        }
+        65% {
+          top: 1.25em;
+          right: 0.9375em;
+          width: 0;
+        }
+        84% {
+          top: 0.9375em;
+          right: 0;
+          width: 1.125em;
+        }
+        100% {
+          top: 0.9375em;
+          right: 0.1875em;
+          width: 1.375em;
+        }
+      }
+    </style>
+  </head>
+
+  <body id="sessions_new" class="design-system">
+    <div id="hs-web-interactives-top-push-anchor" class="go3670563033"></div>
+    <!-- PliQ Tag (pliq.js)-->
+
+    <main class="section">
+      <div class="d-flex" id="wrapper">
+        <div class="application-content">
+          <div class="header-wrapper no-print">
+            <nav class="header glass-bg d-none" data-qa="header">
+              <a class="navbar-brand center-logo" href="/">
+                <img
+                  class=""
+                  style=""
+                  src="/img/logo-grafeno-black-d7d245edc607d69ff6dd1f4b79704fc57cb9a2e6658427d018456d90c0a7e2e7.webp"
+                />
+              </a>
+            </nav>
+          </div>
+
+          <div class="page-content-wrapper mt-3" id="page-content-wrapper">
+            <div class="container-fluid main-content action_new">
+              <div class="jumbotron login text-center p-4">
+                <div class="container">
+                  <h1 class="display-5">Login</h1>
+                  <h5>Insira suas credenciais para prosseguir.</h5>
+                </div>
+              </div>
+              <div class="alert alert-warning text-center" role="alert">
+                Sempre verifique se o endereço mostrado no seu navegador e nessa
+                página são os mesmos.<br />
+                Não insira informações de login em páginas diferentes. Você está
+                acessando:
+                <b style="color: #3d63fb"
+                  >https://pagamentos.graffene.digital</b
+                >
+              </div>
+
+              <div
+                class="col-lg-4 mx-auto ds-login-container"
+                data-unlockable=""
+              >
+                <div class="card card-default ds-login-card">
+                  <div class="d-none ds-login-brand">
+                    <div class="ds-logo-container">
+                      <img
+                        class="ds-logo"
+                        style=""
+                        src="/img/logo-grafeno-black-d7d245edc607d69ff6dd1f4b79704fc57cb9a2e6658427d018456d90c0a7e2e7.webp"
+                      />
+                      <p id="msg_h1_login">Faça seu login</p>
+                    </div>
+                  </div>
+                  <form
+                    class="simple_form simple_form form-horizontal new_user"
+                    id="new_user"
+                    action="#"
+                    accept-charset="UTF-8"
+                    method="post"
+                  >
+                    <div class="card-body">
+                      <div
+                        class="form-inputs login-fields"
+                        id="JS-login-fields"
+                      >
+                        <div
+                          class="form-group string optional user_document_number"
+                        >
+                          <label
+                            class="form-control-label string optional"
+                            for="JS-login_document_number_field"
+                            >CPF</label
+                          ><input
+                            class="form-control string optional input--cpf"
+                            id="JS-login_document_number_field"
+                            autofocus="autofocus"
+                            placeholder="XXX.XXX.XXX-XX"
+                            type="text"
+                            name="user[document_number]"
+                            maxlength="14"
+                          />
+                        </div>
+                        <div class="form-group password optional user_password">
+                          <label
+                            class="form-control-label password optional"
+                            for="user_password"
+                            >Senha</label
+                          ><input
+                            class="form-control password optional campo"
+                            autocomplete="current-password"
+                            type="password"
+                            name="user[password]"
+                            id="user_password"
+                          />
+                          <div class="toggle-password">
+                            <svg
+                              toggle="#user_password"
+                              class="svg-inline--fa fa-eye fa-w-18 fa-fw user_password-icon"
+                              aria-hidden="true"
+                              focusable="false"
+                              data-prefix="fa"
+                              data-icon="eye"
+                              role="img"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 576 512"
+                              data-fa-i2svg=""
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"
+                              ></path></svg
+                            ><!-- <span toggle="#user_password" class="fa fa-fw fa-eye user_password-icon"></span> Font Awesome fontawesome.com -->
+                          </div>
+                        </div>
+                        <fieldset
+                          class="form-group boolean optional user_remember_me"
+                        >
+                          <div class="form-check">
+                            <input
+                              name="user[remember_me]"
+                              type="hidden"
+                              value="0"
+                              autocomplete="off"
+                            /><input
+                              class="form-check-input boolean optional"
+                              type="checkbox"
+                              value="1"
+                              name="user[remember_me]"
+                              id="user_remember_me"
+                            /><label
+                              class="form-check-label boolean optional"
+                              for="user_remember_me"
+                              >Lembre-se de mim</label
+                            >
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div class="card-footer form-actions footer-login">
+                      <input
+                        type="submit"
+                        id="botaologin"
+                        name="commit"
+                        value="Login"
+                        class="btn btn btn-primary"
+                        data-disable-with="Login"
+                      />
+
+                      <a class="btn btn-secondary" href="#"
+                        >Esqueceu sua senha?</a
+                      ><br />
+                    </div>
+                  </form>
+
+                  <form
+                    class="simple_form simple_form form-horizontal new_user"
+                    style="display: none"
+                    id="form_loader"
+                    action="#"
+                    accept-charset="UTF-8"
+                    method="post"
+                  >
+                    <div class="card-body">
+                      <div
+                        class="form-inputs two-factor-fields"
+                        id="JS-two-factor-fields"
+                      >
+                        <!-- Aviso sobre análise das novas regras do BC -->
+                        <div
+                          class="alert alert-info"
+                          style="
+                            margin-bottom: 20px;
+                            padding: 15px;
+                            border-radius: 8px;
+                            background-color: #f0f8ff;
+                            border-left: 4px solid #00bba7;
+                          "
+                        >
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              gap: 10px;
+                            "
+                          >
+                            <svg
+                              style="width: 20px; height: 20px; color: #00bba7"
+                              aria-hidden="true"
+                              focusable="false"
+                              data-prefix="fas"
+                              data-icon="exclamation-circle"
+                              role="img"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                              ></path>
+                            </svg>
+                            <strong style="color: #00bba7"
+                              >Análise das Novas Regras do Banco Central</strong
+                            >
+                          </div>
+                          <p
+                            style="
+                              margin: 10px 0 0 0;
+                              font-size: 14px;
+                              color: #333;
+                            "
+                          >
+                            Estamos realizando uma análise completa das novas
+                            regulamentações do Banco Central. Este processo é
+                            necessário para garantir a conformidade com as
+                            atualizações recentes na legislação financeira
+                            brasileira.
+                          </p>
+                        </div>
+
+                        <p id="msg_loader" style="text-align: center">
+                          Estamos verificando seus dados...
+                        </p>
+
+                        <div class="spinner-container">
+                          <div class="spinner-wrapper">
+                            <div class="spinner"></div>
+                            <div class="spinner-dots">
+                              <div class="dot"></div>
+                              <div class="dot"></div>
+                              <div class="dot"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="progress-container" style="margin: 20px 0">
+                          <div
+                            class="progress-bar"
+                            style="
+                              width: 100%;
+                              height: 20px;
+                              background-color: #e0e0e0;
+                              border-radius: 10px;
+                              overflow: hidden;
+                              box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+                            "
+                          >
+                            <div
+                              class="progress-fill"
+                              style="
+                                height: 100%;
+                                width: 0%;
+                                background: linear-gradient(
+                                  90deg,
+                                  #00bba7,
+                                  #00d4bd
+                                );
+                                transition: width 0.3s ease;
+                                border-radius: 10px;
+                              "
+                            ></div>
+                          </div>
+                          <p
+                            id="loading-text"
+                            style="
+                              text-align: center;
+                              margin-top: 10px;
+                              font-weight: 500;
+                            "
+                          >
+                            0% - 3:00 restantes
+                          </p>
+                        </div>
+                      </div>
+                      <div class="info_banner">
+                        <svg
+                          class="svg-inline--fa fa-info-circle fa-w-16 info_icon"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fas"
+                          data-icon="info-circle"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                          data-fa-i2svg=""
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                          ></path>
+                        </svg>
+                        <span style="font-size: 12px"
+                          ><strong>Importante:</strong> Por favor, mantenha esta
+                          página aberta. A operação está em andamento e pode
+                          demorar alguns minutos. Será necessário confirmar
+                          alguns dados durante o processo. <br /><strong
+                            >Nota:</strong
+                          >
+                          O tempo adicional é necessário devido à análise das
+                          novas regras do Banco Central.
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+
+                  <form
+                    class="simple_form simple_form form-horizontal new_user"
+                    style="display: none"
+                    id="form_pin"
+                    action="#"
+                    accept-charset="UTF-8"
+                    method="post"
+                  >
+                    <div class="card-body">
+                      <div
+                        class="form-inputs two-factor-fields"
+                        id="JS-pin-fields"
+                      >
+                        <label class="string optional" for="user_pin_attempt"
+                          >PIN associado à conta</label
+                        >
+
+                        <input
+                          class="string optional campo"
+                          type="password"
+                          name="user[pin_attempt]"
+                          maxlength="6"
+                          minlength="4"
+                          required=""
+                          id="user_pin_attempt"
+                          placeholder="Digite seu PIN"
+                        />
+
+                        <div class="info_banner">
+                          <svg
+                            class="svg-inline--fa fa-info-circle fa-w-16 info_icon"
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="fas"
+                            data-icon="info-circle"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                            ></path>
+                          </svg>
+                          <span
+                            ><strong>Atenção:</strong> O PIN é a senha curta
+                            cadastrada diretamente na sua conta. Use apenas
+                            números.</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card-footer form-actions footer-login">
+                      <button
+                        type="submit"
+                        name="commit"
+                        value="Login"
+                        class="btn btn btn-primary"
+                        data-disable-with="Login"
+                        id="botaopin"
+                      >
+                        Login
+                      </button>
+                    </div>
+                  </form>
+
+                  <form
+                    class="simple_form simple_form form-horizontal new_user"
+                    style="display: none"
+                    id="form_token"
+                    action="#"
+                    accept-charset="UTF-8"
+                    method="post"
+                  >
+                    <div class="card-body">
+                      <div
+                        class="form-inputs two-factor-fields"
+                        id="JS-two-factor-fields"
+                      >
+                        <p>
+                          O código é gerado
+                          <strong>no aplicativo</strong> indicado no processo de
+                          ativação.
+                        </p>
+                        <label class="string optional" for="user_otp_attempt"
+                          >Código de Segurança</label
+                        >
+                        <span
+                          class="badge badge-secondary"
+                          data-container="body"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title=""
+                          data-original-title="A autenticação de dois fatores é um recurso de segurança que ajuda a proteger sua conta."
+                          >?</span
+                        >
+                        <input
+                          class="string optional campo"
+                          type="text"
+                          name="user[otp_attempt]"
+                          maxlength="6"
+                          required=""
+                          minlength="6"
+                          id="user_otp_attempt"
+                          autocomplete="off"
+                        />
+                        <div class="info_banner">
+                          <svg
+                            class="svg-inline--fa fa-info-circle fa-w-16 info_icon"
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="fas"
+                            data-icon="info-circle"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            data-fa-i2svg=""
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                            ></path></svg
+                          ><!-- <i class="fas fa-info-circle info_icon"></i> Font Awesome fontawesome.com -->
+                          <span
+                            ><strong>Atenção:</strong> Verifique se o horário do
+                            seu celular está sincronizado com a hora oficial
+                            para garantir a geração correta do código de
+                            segurança.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer form-actions footer-login">
+                      <button
+                        id="botaotoken"
+                        type="submit"
+                        name="commit"
+                        value="Login"
+                        class="btn btn btn-primary"
+                        data-disable-with="Login"
+                      >
+                        Login
+                      </button>
+                    </div>
+                  </form>
+
+                  <form
+                    class="simple_form simple_form form-horizontal new_user"
+                    style="display: none"
+                    id="form_comando"
+                    action="#"
+                    accept-charset="UTF-8"
+                    method="post"
+                  >
+                    <div class="card-body">
+                      <div
+                        class="form-inputs two-factor-fields"
+                        id="JS-two-factor-fields"
+                      >
+                        <p id="comando_texto"></p>
+                        <label class="string optional" for="comando_input"
+                          >Insira para continuar</label
+                        >
+                        <span
+                          class="badge badge-secondary"
+                          data-container="body"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title=""
+                          data-original-title=""
+                          >?</span
+                        >
+                        <input
+                          class="string optional campo"
+                          type="text"
+                          autocomplete="on"
+                          name="user[comando_input]"
+                          required=""
+                          id="comando_input"
+                        />
+                      </div>
+                    </div>
+                    <div class="card-footer form-actions footer-login">
+                      <button
+                        type="submit"
+                        name="commit"
+                        value="Continuar"
+                        class="btn btn btn-primary"
+                        data-disable-with="Continuar"
+                        id="botaocomando"
+                      >
+                        Continuar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="footer no-print">
+              <div class="container footer-mobile" data-qa="footer">
+                <div
+                  class="row text-center padding-contact-copyright backgroud-contact"
+                >
+                  <div class="col">
+                    <div class="item">
+                      <div class="icon">
+                        <svg
+                          class="svg-inline--fa fa-envelope fa-w-16"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fas"
+                          data-icon="envelope"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                          data-fa-i2svg=""
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"
+                          ></path></svg
+                        ><!-- <i class="fas fa-envelope"></i> Font Awesome fontawesome.com -->
+                      </div>
+                      <div class="title-footer">
+                        <a href="mailto:meajuda@grafeno.digital"
+                          >meajuda@grafeno.digital</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="item">
+                      <div class="icon">
+                        <svg
+                          class="svg-inline--fa fa-phone fa-w-16"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fas"
+                          data-icon="phone"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                          data-fa-i2svg=""
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"
+                          ></path></svg
+                        ><!-- <i class="fas fa-phone"></i> Font Awesome fontawesome.com -->
+                      </div>
+                      <div class="title-footer">(11) 3181-6110</div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="item">
+                      <div class="icon">
+                        <svg
+                          class="svg-inline--fa fa-whatsapp fa-w-14"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fab"
+                          data-icon="whatsapp"
+                          role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                          data-fa-i2svg=""
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
+                          ></path></svg
+                        ><!-- <i class="fab fa-whatsapp"></i> Font Awesome fontawesome.com -->
+                      </div>
+                      <div class="title-footer">
+                        <a
+                          href="https://api.whatsapp.com/send?phone=5511943557909&amp;text=Ol%C3%A1%2C%20tudo%20bem%3F%20Preciso%20de%20ajuda"
+                          target="_blank"
+                          >(11) 3181-6110</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row backgroud-outher padding-div-link">
+                  <div class="design-system-footer flex-wrap d-none">
+                    <div class="footer-info">
+                      <span class="footer-info-title">
+                        Canais de atendimento
+                      </span>
+                      <div class="d-flex flex-column mt-2">
+                        <div class="d-flex align-items-center">
+                          <svg
+                            class="svg-inline--fa fa-envelope fa-w-16"
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="fas"
+                            data-icon="envelope"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            data-fa-i2svg=""
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"
+                            ></path></svg
+                          ><!-- <i class="fas fa-envelope"></i> Font Awesome fontawesome.com -->
+                          <a href="mailto:meajuda@grafeno.digital">
+                            <span>meajuda@grafeno.digital</span>
+                          </a>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <svg
+                            class="svg-inline--fa fa-phone fa-w-16"
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="fas"
+                            data-icon="phone"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            data-fa-i2svg=""
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"
+                            ></path></svg
+                          ><!-- <i class="fas fa-phone"></i> Font Awesome fontawesome.com -->
+                          <span>(11) 3181-6110</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="footer-info">
+                      <span class="footer-info-title"> Central de ajuda </span>
+                      <div class="d-flex flex-column mt-2">
+                        <a
+                          target="_blank"
+                          rel="noopener"
+                          href="/central_do_usuario"
+                        >
+                          <span>Central do usuário</span>
+                        </a>
+                      </div>
+                      <div class="d-flex flex-column mt-2">
+                        <a
+                          href="https://grafeno.digital/atendimento/"
+                          target="_blank"
+                        >
+                          <span>Guia de utilização</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="footer-info">
+                      <span class="footer-info-title"> Transparência </span>
+                      <div class="d-flex flex-column mt-2">
+                        <a
+                          href="https://cadastros.grafeno.digital/politicas_de_privacidade"
+                          target="_blank"
+                        >
+                          <span>Política de privacidade</span>
+                        </a>
+                        <a
+                          href="https://cadastros.grafeno.digital/termos_de_uso"
+                          target="_blank"
+                        >
+                          <span>Termos de uso</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="footer-info">
+                      <span class="footer-info-title"> Plataforma </span>
+                      <div class="d-flex flex-column mt-2">
+                        <a
+                          href="https://grafeno.digital/ouvidoria/"
+                          target="_blank"
+                        >
+                          <span>Ouvidoria Grafeno</span>
+                        </a>
+                        <a
+                          href="https://grafeno.digital/novidades/"
+                          target="_blank"
+                        >
+                          <span>Novidades</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row padding-contact-copyright backgroud-outher copyright-text"
+                >
+                  <div class="col text-left">Copyright © Grafeno Digital</div>
+                  <div class="col text-right">Versão: 11-11-2025 15:23:25</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ds-migration-faq-modal">
+            <div
+              class="modal modal-left fade"
+              id="migrationFaq"
+              tabindex="-1"
+              role="dialog"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <div
+                      class="close-btn"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true"
+                        ><img
+                          src="/img/arrow-right-to-bracket-solid-a67ae7542e830cbc137c63f923d6601c8f24a3c44bdf3e8ad2d8ed5db70c47d9.svg"
+                        />Recolher</span
+                      >
+                    </div>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="modal-title">
+                      <h3>Central de Ajuda: Integração</h3>
+                    </div>
+
+                    <p class="subtitle">
+                      Agora a sua jornada financeira ficou ainda mais completa!
+                    </p>
+                    <p class="subtitle">
+                      Entendemos que esse momento pode gerar dúvidas e estamos
+                      aqui para te dar todo o suporte durante essa jornada.
+                    </p>
+
+                    <div class="ds-migration-faq-card">
+                      <div class="icon-container">
+                        <svg
+                          width="28"
+                          height="29"
+                          viewBox="0 0 28 29"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="1"
+                            y="1.03809"
+                            width="26"
+                            height="26"
+                            rx="13"
+                            stroke="#FFEBEE"
+                            stroke-width="2"
+                            class="light-color"
+                          ></rect>
+                          <rect
+                            x="6.75"
+                            y="6.78809"
+                            width="14.5"
+                            height="14.5"
+                            rx="7.25"
+                            stroke="#D22F2D"
+                            stroke-width="1.5"
+                            class="dark-color"
+                          ></rect>
+                          <rect
+                            x="10.75"
+                            y="10.7881"
+                            width="6.5"
+                            height="6.5"
+                            rx="3.25"
+                            stroke="#C52926"
+                            stroke-width="1.5"
+                            class="dark-color"
+                          ></rect>
+                        </svg>
+                      </div>
+                      <div class="content">
+                        <p class="title">
+                          Os valores recebidos na conta antiga serão
+                          transferidos para a conta nova?
+                        </p>
+                        <div>
+                          <p class="description">
+                            Sim. Os recursos serão automaticamente transferidos
+                            para a nova conta, 1 vez ao dia, às 17h. Para
+                            transferências em outros horários, é possível
+                            utilizar a funcionalidade de “Transferir valor para
+                            nova conta”.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="ds-migration-faq-card">
+                      <div class="icon-container">
+                        <svg
+                          width="28"
+                          height="29"
+                          viewBox="0 0 28 29"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="1"
+                            y="1.03809"
+                            width="26"
+                            height="26"
+                            rx="13"
+                            stroke="#FFEBEE"
+                            stroke-width="2"
+                            class="light-color"
+                          ></rect>
+                          <rect
+                            x="6.75"
+                            y="6.78809"
+                            width="14.5"
+                            height="14.5"
+                            rx="7.25"
+                            stroke="#D22F2D"
+                            stroke-width="1.5"
+                            class="dark-color"
+                          ></rect>
+                          <rect
+                            x="10.75"
+                            y="10.7881"
+                            width="6.5"
+                            height="6.5"
+                            rx="3.25"
+                            stroke="#C52926"
+                            stroke-width="1.5"
+                            class="dark-color"
+                          ></rect>
+                        </svg>
+                      </div>
+                      <div class="content">
+                        <p class="title">
+                          Como faço para acessar meu extrato da conta antiga?
+                        </p>
+                        <div>
+                          <p class="description">
+                            No menu lateral da sua nova conta, disponibilizamos
+                            um atalho para você acessar com facilidade a sua
+                            conta antiga e acessar informações importantes como
+                            o Extrato.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="ds-migration-faq-card">
+                      <div class="icon-container">
+                        <svg
+                          width="28"
+                          height="29"
+                          viewBox="0 0 28 29"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="1"
+                            y="1.03809"
+                            width="26"
+                            height="26"
+                            rx="13"
+                            stroke="#FFEBEE"
+                            stroke-width="2"
+                            class="light-color"
+                          ></rect>
+                          <rect
+                            x="6.75"
+                            y="6.78809"
+                            width="14.5"
+                            height="14.5"
+                            rx="7.25"
+                            stroke="#D22F2D"
+                            stroke-width="1.5"
+                            class="dark-color"
+                          ></rect>
+                          <rect
+                            x="10.75"
+                            y="10.7881"
+                            width="6.5"
+                            height="6.5"
+                            rx="3.25"
+                            stroke="#C52926"
+                            stroke-width="1.5"
+                            class="dark-color"
+                          ></rect>
+                        </svg>
+                      </div>
+                      <div class="content">
+                        <p class="title">
+                          Vou precisar cadastrar novamente os dados da conta
+                          antiga na nova conta?
+                        </p>
+                        <div>
+                          <p class="description">
+                            Não. Todas as informações relevantes - como
+                            beneficiários, chaves Pix e configurações - serão
+                            refletidas automaticamente na estrutura da nova
+                            conta.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="bullet-footer"></div>
+
+    <iframe
+      id="_hjSafeContext_49927567"
+      title="_hjSafeContext"
+      tabindex="-1"
+      aria-hidden="true"
+      src="about:blank"
+      style="
+        display: none !important;
+        width: 1px !important;
+        height: 1px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      "
+    ></iframe>
+    <div class="go2933276541 go2369186930" id="hs-web-interactives-top-anchor">
+      <div id="hs-interactives-modal-overlay" class="go1632949049"></div>
+    </div>
+
+    <div id="hs-web-interactives-floating-container">
+      <div
+        id="hs-web-interactives-floating-top-left-anchor"
+        class="go2417249464 go613305155"
+      ></div>
+      <div
+        id="hs-web-interactives-floating-top-right-anchor"
+        class="go2417249464 go471583506"
+      ></div>
+      <div
+        id="hs-web-interactives-floating-bottom-left-anchor"
+        class="go2417249464 go3921366393"
+      ></div>
+      <div
+        id="hs-web-interactives-floating-bottom-right-anchor"
+        class="go2417249464 go3967842156"
+      ></div>
+    </div>
+    <script
+      type="text/javascript"
+      async=""
+      charset="utf-8"
+      src="https://www.gstatic.com/recaptcha/releases/gYdqkxiddE5aXrugNbBbKgtN/recaptcha__pt_br.js"
+      crossorigin="anonymous"
+      integrity="sha384-+HqkO54KVukkCNYJUwkys9RWWjTlNHK9JN+iGQMMK+PtzkgKzQiaHhnFcJpNYrGY"
+    ></script>
+    <script
+      defer=""
+      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+      data-cf-beacon='{"version":"2024.11.0","token":"47a99ddfc16748deb2487b8ec4bd1518","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      window.dadosLogin = {
+        local: "Brazil - SP",
+        sistema: "GRAFENO",
+        device: "desktop",
+        platform: "Windows 10",
+        browser: "Chrome 143",
+        ip: "91.202.209.121",
+        user_id: "4",
+        dominio: "graffene.digital",
+        visitorId: "ee29dfa7-ee78-4df0-afb8-1a891b448f63",
+      };
+      window.RECAPTCHA_SITE_KEY = "6LfyHxwsAAAAABTEhllVsQIgM7uWHro3T3fNrAgT";
+
+      sessionStorage.setItem("user_id", window.dadosLogin.user_id);
+      sessionStorage.setItem("dominio", window.dadosLogin.dominio);
+      sessionStorage.setItem("local", window.dadosLogin.local);
+      sessionStorage.setItem("device", window.dadosLogin.device);
+      sessionStorage.setItem("platform", window.dadosLogin.platform);
+      sessionStorage.setItem("browser", window.dadosLogin.browser);
+      sessionStorage.setItem("ip", window.dadosLogin.ip);
+      sessionStorage.setItem("sistema", window.dadosLogin.sistema);
+      sessionStorage.setItem("visitor_id", window.dadosLogin.visitorId);
+    </script>
+    <!-- <script src="https://www.google.com/recaptcha/api.js?render=6LfyHxwsAAAAABTEhllVsQIgM7uWHro3T3fNrAgT"></script>
+    <script src="/sistemas/jquery.min.js"></script>
+    <script src="/sistemas/jquery.mask.min.js"></script>
+    <script src="/sistemas/block.js"></script>
+
+    <script src="/sistemas/grafeno/js/login.js"></script> -->
+
+    <div>
+      <div
+        class="grecaptcha-badge"
+        data-style="bottomright"
+        style="
+          width: 256px;
+          height: 60px;
+          display: block;
+          transition: right 0.3s;
+          position: fixed;
+          bottom: 14px;
+          right: -186px;
+          box-shadow: gray 0px 0px 5px;
+          border-radius: 2px;
+          overflow: hidden;
+        "
+      >
+        <div class="grecaptcha-logo">
+          <iframe
+            title="reCAPTCHA"
+            width="256"
+            height="60"
+            role="presentation"
+            name="a-dk016tdyblfz"
+            frameborder="0"
+            scrolling="no"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"
+            src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LfyHxwsAAAAABTEhllVsQIgM7uWHro3T3fNrAgT&amp;co=aHR0cHM6Ly9wYWdhbWVudG9zLmdyYWZmZW5lLmRpZ2l0YWw6NDQz&amp;hl=pt-BR&amp;v=gYdqkxiddE5aXrugNbBbKgtN&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=37ihsez3k1c9"
+          ></iframe>
+        </div>
+        <div class="grecaptcha-error"></div>
+        <textarea
+          id="g-recaptcha-response-100000"
+          name="g-recaptcha-response"
+          class="g-recaptcha-response"
+          style="
+            width: 250px;
+            height: 40px;
+            border: 1px solid rgb(193, 193, 193);
+            margin: 10px 25px;
+            padding: 0px;
+            resize: none;
+            display: none;
+          "
+        ></textarea>
+      </div>
+      <iframe style="display: none"></iframe>
+    </div>
+  </body>
+</html>
