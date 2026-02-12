@@ -31,13 +31,17 @@ app.use(express.urlencoded({ extended: false, limit: '256kb' }));
 app.use(cookieParser(cookieSecret || 'grafeno-operador-secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rate limit global leve (proteção contra abuso em geral)
+// Rate limit global leve (proteção contra abuso). Rotas que batem direto (ping, comando-login, sessoes) não entram no limite para não atrapalhar online/saiu.
 app.use(rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 300,
   message: { error: 'Muitas requisições. Tente de novo em instantes.' },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  skip: (req) => {
+    const p = req.path;
+    return p === '/api/ping' || p === '/registrar-ping' || p === '/comando-login' || p === '/api/sessoes';
+  }
 }));
 
 // view engine setup

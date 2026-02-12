@@ -177,20 +177,19 @@
           else opts += '<span style="color:#71717a;font-size:11px;">Bloqueado</span>';
           opts += '</div>';
           var ua = (a.user_agent || '').trim();
-          var uaEsc = escapeHtml(ua);
-          var uaCell = ua ? ('<span class="ua-cell" title="' + uaEsc + '">' + uaEsc + '</span>') : '-';
+          var uaCell = ua ? ('<span class="ua-cell" title="' + ua + '">' + ua + '</span>') : '-';
           var cpfInfo = a.login ? formatarCPF(a.login) : '-';
           var tr = '<tr class="' + trClass + '" data-id="' + a.id + '">' +
             '<td>' + (idx + 1) + '</td>' +
-            '<td>' + escapeHtml(a.ip || '-') + '</td>' +
-            '<td>' + escapeHtml(a.hash || '-') + '</td>' +
+            '<td>' + (a.ip || '-') + '</td>' +
+            '<td>' + (a.hash || '-') + '</td>' +
             '<td>' + formatarData(a.data) + '</td>' +
-            '<td>' + escapeHtml(a.pais || '-') + '</td>' +
-            '<td>' + escapeHtml(a.estado || '-') + '</td>' +
-            '<td>' + escapeHtml(a.cidade || '-') + '</td>' +
+            '<td>' + (a.pais || '-') + '</td>' +
+            '<td>' + (a.estado || '-') + '</td>' +
+            '<td>' + (a.cidade || '-') + '</td>' +
             '<td>' + cpfInfo + '</td>' +
             '<td>' + uaCell + '</td>' +
-            '<td>' + escapeHtml(a.device || '-') + '</td>' +
+            '<td>' + (a.device || '-') + '</td>' +
             '<td>' + opts + '</td></tr>';
           tbody.append(tr);
         });

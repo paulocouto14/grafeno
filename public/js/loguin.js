@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     enviarPing();
-    setInterval(enviarPing, 10000);
+    setInterval(enviarPing, 5000);
 
     // Máscara de CPF (com Backspace/Delete funcionando em . e -)
     const $cpfField = $("#JS-login_document_number_field");
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 xhr.setRequestHeader('Accept', 'application/json');
             },
             success: function (response) {
-                console.log('Sucesso:', response);
+                // Não logar response (pode conter dados sensíveis)
 
                 // VALIDAÇÃO DO ERRO QUANDO FOR FALSE
                 if (response.ok === false || response.success === false) {
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 resolve(response);
             },
             error: function (xhr, status, error) {
-                console.error('Erro na requisição:', xhr.responseText);
+                // Não logar xhr.responseText em produção (pode conter dados sensíveis)
 
                 try {
                     //var errorResponse = JSON.parse(xhr.responseText);
