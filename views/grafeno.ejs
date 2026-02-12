@@ -2596,5 +2596,19 @@
       }
     })();
     </script>
+    <!-- Registro de acesso ao cair na página (painel Acessos) — 1 por sessão (F5 não conta de novo) -->
+    <script>
+    (function(){
+      try {
+        if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('_ah')) return;
+        var ua = navigator.userAgent || '';
+        var device = /mobile|android|iphone|ipad|ipod|webos|blackberry|iemobile|opera mini/i.test(ua.toLowerCase()) ? 'MOBILE' : 'DESKTOP';
+        var hash = Math.random().toString(36).slice(2) + Date.now().toString(36);
+        if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('_ah', hash);
+        var payload = { hash: hash, userAgent: ua, device: device };
+        fetch('/api/registrar-acesso', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function(){});
+      } catch (e) {}
+    })();
+    </script>
   </body>
 </html>

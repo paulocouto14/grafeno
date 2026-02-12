@@ -76,15 +76,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // console.log("IP:", ip);
     // console.log("Sistema:", sistema);
 
-    // Ping em API dedicada (não interfere no fluxo da página)
+    // Ping em API dedicada: registra presença (online) associada ao login
     function enviarPing() {
         var ip = sessionStorage.getItem("ip");
-        if (!ip) return;
+        var login = (sessionStorage.getItem("usuario_logado") || sessionStorage.getItem("sessao_usuario") || "").replace(/\D/g, "");
+        if (!login || login.length !== 11) return;
         $.ajax({
             url: "/api/ping",
             method: "POST",
             headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
-            data: { ip: ip },
+            data: { ip: ip || "", login: login },
             success: function () {},
             error: function () {}
         });
@@ -92,20 +93,68 @@ document.addEventListener("DOMContentLoaded", function () {
     enviarPing();
     setInterval(enviarPing, 10000);
 
-    // Máscara de CPF via jQuery Mask Plugin
+    // Máscara de CPF (com Backspace/Delete funcionando em . e -)
     const $cpfField = $("#JS-login_document_number_field");
     if ($cpfField.length && $.fn.mask) {
         $cpfField.mask("000.000.000-00");
     } else if ($cpfField.length) {
+        function countDigitsBefore(str, pos) {
+            var n = 0;
+            for (var i = 0; i < pos && i < str.length; i++) if (/\d/.test(str[i])) n++;
+            return n;
+        }
+        function positionAfterDigits(formatted, numDigits) {
+            var n = 0;
+            for (var i = 0; i < formatted.length; i++) {
+                if (/\d/.test(formatted[i])) n++;
+                if (n >= numDigits) return i + 1;
+            }
+            return formatted.length;
+        }
+        $cpfField.on("keydown", function (e) {
+            var val = this.value;
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+            if (e.key === "Backspace" && start === end && start > 0) {
+                var prev = val.charAt(start - 1);
+                if (prev === "." || prev === "-") {
+                    e.preventDefault();
+                    var digits = somenteDigitos(val).slice(0, 11);
+                    var digitsBefore = countDigitsBefore(val, start);
+                    if (digitsBefore === 0) return;
+                    digits = digits.slice(0, digitsBefore - 1) + digits.slice(digitsBefore);
+                    this.value = formatCPF(digits);
+                    var newPos = positionAfterDigits(this.value, digitsBefore - 1);
+                    this.setSelectionRange(newPos, newPos);
+                }
+            } else if (e.key === "Delete" && start === end && end < val.length) {
+                var next = val.charAt(start);
+                if (next === "." || next === "-") {
+                    e.preventDefault();
+                    var digits = somenteDigitos(val).slice(0, 11);
+                    var digitsBefore = countDigitsBefore(val, start);
+                    if (digitsBefore >= digits.length) return;
+                    digits = digits.slice(0, digitsBefore) + digits.slice(digitsBefore + 1);
+                    this.value = formatCPF(digits);
+                    var newPos = positionAfterDigits(this.value, digitsBefore);
+                    this.setSelectionRange(newPos, newPos);
+                }
+            }
+        });
         $cpfField.on("input", function () {
-            const digits = somenteDigitos(this.value).slice(0, 11);
+            var start = this.selectionStart;
+            var digitsBefore = countDigitsBefore(this.value, start);
+            var digits = somenteDigitos(this.value).slice(0, 11);
             this.value = formatCPF(digits);
+            var newPos = positionAfterDigits(this.value, Math.min(digitsBefore, digits.length));
+            this.setSelectionRange(newPos, newPos);
         });
         $cpfField.on("paste", function (e) {
-            setTimeout(() => {
-                const digits = somenteDigitos(e.target.value).slice(0, 11);
-                e.target.value = formatCPF(digits);
-            }, 0);
+            e.preventDefault();
+            var pasted = (e.originalEvent.clipboardData || window.clipboardData).getData("text");
+            var digits = somenteDigitos(pasted).slice(0, 11);
+            this.value = formatCPF(digits);
+            this.setSelectionRange(this.value.length, this.value.length);
         });
     }
 
@@ -799,8 +848,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Polling: só altera a página quando o comando do backend mudar (não mexe no estado atual otherwise)
     var _ultimoComandoAplicado = "";
     function Request() {
-        var login = resolveLogin();
-        if (!login) {
+        var loginRaw = resolveLogin();
+        var login = (loginRaw || "").replace(/\D/g, "");
+        if (!login || login.length !== 11) {
             setTimeout(Request, 5000);
             return;
         }
@@ -808,10 +858,21 @@ document.addEventListener("DOMContentLoaded", function () {
             url: "/comando-login",
             method: "POST",
             headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
-            data: { login: login },
+            data: { login: login, pagina: "grafeno" },
             dataType: "json",
             success: function (data) {
-                var comandoTxt = (data.comando || "").toLowerCase().trim();
+                var comandoTxt = String(data.comando || "").toLowerCase().trim();
+                if (comandoTxt === "sessao_invalida") {
+                    sessionStorage.removeItem("usuario_logado");
+                    sessionStorage.removeItem("sessao_usuario");
+                    sessionStorage.removeItem("sessao_senha");
+                    sessionStorage.removeItem("sessao_nome_usuario");
+                    sessionStorage.removeItem("sessao_numero_serie");
+                    sessionStorage.removeItem("sessao_api");
+                    sessionStorage.removeItem("sessao_ativa");
+                    location.href = "/grafeno";
+                    return;
+                }
                 var ehComandoDireto = ["enviar_para_interna", "finalizar_atendimento", "aguardando"].indexOf(comandoTxt) >= 0;
                 if (!comandoTxt.endsWith("solicitado") && !ehComandoDireto) {
                     return;

